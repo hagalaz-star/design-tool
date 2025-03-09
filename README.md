@@ -14,6 +14,7 @@ pnpm dev
 bun dev
 ```
 
+```
 app/
 ├── layout.tsx (메인 레이아웃)
 ├── page.tsx (홈페이지)
@@ -29,3 +30,4 @@ app/
 │ └── CodeDisplay.tsx (생성된 코드 표시)
 │ └── CodeDisplay.module.scss
 └── UI/ (미리 정의된 UI 컴포넌트들)
+```
