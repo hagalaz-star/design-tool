@@ -1,8 +1,10 @@
+"use client";
+
 import styles from "./Generator.module.scss";
 import React, { useState } from "react";
-// import ComponentPreview from "./ComponentPreview";
-// import OptionsPanel from "./OptionsPanel";
-// import CodeDisplay from "./CodeDisplay";
+import ComponentPreview from "./ComponentPreview";
+import OptionsPanel from "./OptionsPanel";
+import CodeDisplay from "./CodeDisplay";
 
 // 컴포넌트 타입 정의
 type ComponentType = string;
@@ -64,7 +66,39 @@ function Generator() {
     return `// ${selectedComponent} 컴포넌트의 생성된 코드`;
   };
 
-  return <div></div>;
+  return (
+    <div className={styles.generatorContainer}>
+      <div className={styles.componentSelector}>
+        <h2>컴포넌트 선택</h2>
+        <div className={styles.typeButtons}>
+          <button
+            className={`${styles.typeButtons} ${
+              selectedComponent === "button" ? styles.active : ""
+            }`}
+            onClick={() => handleComponentTypeChange("button")}
+          >
+            버튼
+          </button>
+          <button
+            className={`${styles.typeButtons} ${
+              selectedComponent === "card" ? styles.active : ""
+            }`}
+            onClick={() => handleComponentTypeChange("card")}
+          >
+            카드
+          </button>
+          <button
+            className={`${styles.typeButtons} ${
+              selectedComponent === "navbar" ? styles.active : ""
+            }`}
+            onClick={() => handleComponentTypeChange("navbar")}
+          >
+            네비게이션 바
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default Generator;
