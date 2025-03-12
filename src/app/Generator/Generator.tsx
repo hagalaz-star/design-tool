@@ -96,6 +96,13 @@ function Generator() {
             네비게이션 바
           </button>
         </div>
+        <div className={styles.workArea}>
+          <OptionsPanel
+            componentType={selectedComponent}
+            options={Options}
+            onOptionChange={handleOptionChange}
+          />
+        </div>
       </div>
     </div>
   );
