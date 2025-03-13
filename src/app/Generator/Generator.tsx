@@ -2,8 +2,8 @@
 
 import styles from "./Generator.module.scss";
 import React, { useState } from "react";
-import ComponentPreview from "./ComponentPreview";
 import OptionsPanel from "./OptionsPanel";
+import ComponentPreview from "./ComponentPreview";
 import CodeDisplay from "./CodeDisplay";
 
 // 컴포넌트 타입 정의
@@ -25,15 +25,17 @@ function Generator() {
     text: "버튼",
   });
 
-  // 옵션 변경 핸들러
+  // 사용자가 다른 컴포넌트 유형(버튼, 카드, 네비게이션 바 등)을 선택했을 때 처리
   const handleOptionChange = (name: string, value: any) => {
-    setOptions((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    console.log(`옵션 변경: ${name}=${value}`);
+    setOptions((prev) => {
+      const newOptions = { ...prev, [name]: value };
+      console.log("새 상태:", newOptions);
+      return newOptions;
+    });
   };
 
-  // 컴포넌트 타입이 변경될 때 호출되는 핸들러
+  // 사용자가 컴포넌트의 개별 속성(색상, 크기, 둥근 모서리 등)을 변경할 때 처리
   const handleComponentTypeChange = (newType: ComponentType) => {
     setSelectedComponent(newType);
 
