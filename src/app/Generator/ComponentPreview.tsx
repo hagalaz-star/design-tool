@@ -62,7 +62,37 @@ function ComponentPreview({ componentType, options }: previewType) {
           display: "flex",
           justifyContent: "space-between",
           boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+          padding: "0 20px",
+          width: "100%",
         };
+
+        const logoStyle: CSSProperties = {
+          fontWeight: "bold",
+          fontSize: "1.2rem",
+        };
+
+        const menuStyle: CSSProperties = {
+          display: "flex",
+          listStyle: "none",
+          gap: "20px",
+          margin: 0,
+          padding: 0,
+        };
+
+        const menuItemStyle: CSSProperties = {
+          cursor: "pointer",
+          color: options.textColor,
+        };
+        return (
+          <nav style={navbarStyle}>
+            <div style={logoStyle}>{options.logo ? "로고" : "브랜드명"}</div>
+            <ul style={menuStyle}>
+              <li style={menuItemStyle}>메뉴1</li>
+              <li style={menuItemStyle}>메뉴2</li>
+              <li style={menuItemStyle}>메뉴3</li>
+            </ul>
+          </nav>
+        );
     }
   };
   return renderPreview();
