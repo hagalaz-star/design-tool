@@ -104,6 +104,11 @@ function Generator() {
             options={Options}
             onOptionChange={handleOptionChange}
           />
+          <ComponentPreview
+            componentType={selectedComponent}
+            options={Options}
+          />
+          <CodeDisplay componentType={selectedComponent} options={Options} />
         </div>
       </div>
     </div>

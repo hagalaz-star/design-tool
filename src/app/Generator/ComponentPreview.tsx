@@ -97,3 +97,5 @@ function ComponentPreview({ componentType, options }: previewType) {
   };
   return renderPreview();
 }
+
+export default ComponentPreview;
