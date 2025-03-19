@@ -98,16 +98,30 @@ function Generator() {
             네비게이션 바
           </button>
         </div>
+
+        {/* {기존 컴포넌트 선택 UI} */}
         <div className={styles.workArea}>
           <OptionsPanel
             componentType={selectedComponent}
             options={Options}
             onOptionChange={handleOptionChange}
           />
-          <ComponentPreview
-            componentType={selectedComponent}
-            options={Options}
-          />
+        </div>
+
+        {/* {미리보기 섹션} */}
+        <div className={styles.previewSection}>
+          <h3>미리보기</h3>
+          <div className={styles.previewContainer}>
+            <ComponentPreview
+              componentType={selectedComponent}
+              options={Options}
+            />
+          </div>
+        </div>
+
+        {/* {코드 디스플레이 섹션 추가} */}
+        <div className={styles.codeSection}>
+          <h3>코드</h3>
           <CodeDisplay componentType={selectedComponent} options={Options} />
         </div>
       </div>

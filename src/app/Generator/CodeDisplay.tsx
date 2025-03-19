@@ -1,4 +1,6 @@
-import React, { useState, CSSProperties } from "react";
+import React, { useState, CSSProperties, useEffect } from "react";
+import hljs from "highlight.js";
+import "highlight.js/styles/github.css";
 import styles from "./CodeDisplay.module.scss";
 
 interface displayType {
@@ -8,6 +10,8 @@ interface displayType {
 
 function CodeDisplay({ componentType, options }: displayType) {
   const [codeFormat, setCodeFormat] = useState<"react" | "html">("react");
+  const [copyStatus, setCopyStatus] = useState("복사하기");
+
   const generateCode = () => {
     if (componentType === "button") {
       if (codeFormat === "react") {
@@ -198,6 +202,23 @@ function CodeDisplay({ componentType, options }: displayType) {
     }
     return "// 지원되지 않는 컴포넌트 또는 포맷입니다.";
   };
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(generateCode());
+      setCopyStatus("복사완료!");
+      setTimeout(() => setCopyStatus("복사하기"), 2000);
+    } catch (err) {
+      setCopyStatus("복사 실패");
+      setTimeout(() => setCopyStatus("복사하기"), 2000);
+    }
+  };
+
+  useEffect(() => {
+    document.querySelectorAll("pre code").forEach((block) => {
+      hljs.highlightElement(block as HTMLElement);
+    });
+  }, [componentType, options, codeFormat]);
+
   return (
     <div className={styles.CodeDisplay}>
       <div className={styles.formatSelector}>
@@ -219,11 +240,8 @@ function CodeDisplay({ componentType, options }: displayType) {
         <code>{generateCode()}</code>
       </pre>
 
-      <button
-        className={styles.copyButton}
-        onClick={() => navigator.clipboard.writeText(generateCode())}
-      >
-        코드 복사
+      <button className={styles.copyButton} onClick={handleCopy}>
+        {copyStatus}
       </button>
     </div>
   );
