@@ -2,19 +2,20 @@
 
 import React from "react";
 import styles from "./OptionsPanel.module.scss";
+import { ComponentType, ComponentOptions } from "@/app/types/index";
 
 // Props 타입 정의
-interface OptionsPanelProps {
-  componentType: string;
-  options: Record<string, any>;
+interface OptionsPanelProps<T extends ComponentType> {
+  componentType: T;
+  options: ComponentOptions[T];
   onOptionChange: (name: string, value: any) => void;
 }
 
-function OptionsPanel({
+function OptionsPanel<T extends ComponentType>({
   componentType,
   options,
   onOptionChange,
-}: OptionsPanelProps) {
+}: OptionsPanelProps<T>) {
   const renderOptions = () => {
     switch (componentType) {
       case "button":

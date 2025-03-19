@@ -1,12 +1,16 @@
 import React, { CSSProperties } from "react";
 import styles from "./ComponentPreview.module.scss";
+import { ComponentType, ComponentOptions } from "@/app/types/index";
 
-interface previewType {
-  componentType: string;
-  options: Record<string, any>;
+interface previewType<T extends ComponentType> {
+  componentType: ComponentType;
+  options: ComponentOptions[T];
 }
 
-function ComponentPreview({ componentType, options }: previewType) {
+function ComponentPreview<T extends ComponentType>({
+  componentType,
+  options,
+}: previewType<T>) {
   const renderPreview = () => {
     switch (componentType) {
       case "button":

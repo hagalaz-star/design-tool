@@ -5,12 +5,7 @@ import React, { useState } from "react";
 import OptionsPanel from "./OptionsPanel";
 import ComponentPreview from "./ComponentPreview";
 import CodeDisplay from "./CodeDisplay";
-
-// 컴포넌트 타입 정의
-type ComponentType = string;
-
-// 컴포넌트 옵션 타입 정의
-type ComponentOptions = Record<string, any>;
+import { ComponentType, ComponentOptions } from "@/app/types/index";
 
 function Generator() {
   // 선택된 컴포넌트 타입
@@ -62,10 +57,6 @@ function Generator() {
         logo: true,
       });
     }
-  };
-  // 코드 생성 함수
-  const generateCode = () => {
-    return `// ${selectedComponent} 컴포넌트의 생성된 코드`;
   };
 
   return (
