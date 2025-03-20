@@ -57,7 +57,7 @@ function Generator() {
         backgroundColor: "#333333",
         textColor: "#ffffff",
         height: "60px",
-        logo: true,
+        logo: "",
       });
     }
   };

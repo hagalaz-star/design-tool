@@ -22,13 +22,13 @@ function CodeDisplay({ componentType, options }: displayType) {
             style={{
               backgroundColor: "${options.color}",
               borderRadius: "${options.borderRadius}",
-              padding:
-              "${options.size}" === "small"
-                ? "6px 12px"
-                : "${options.size}" === "medium"
-                ? "8px 16px"
-                : "10px 20px",
-        
+              padding: ${
+                options.size === "small"
+                  ? "'6px 12px'"
+                  : options.size === "medium"
+                  ? "'8px 16px'"
+                  : "'10px 20px'"
+              },
               border: "none",
               cursor: "pointer",}}
             >
@@ -37,21 +37,24 @@ function CodeDisplay({ componentType, options }: displayType) {
       );
     };`;
       } else if (codeFormat === "html") {
+        const paddingValue =
+          options.size === "small"
+            ? "6px 12px"
+            : options.size === "medium"
+            ? "8px 16px"
+            : "10px 20px";
+
         return `
         <button class="custom-button">${options.text || "버튼"}</button>
         
         <style>
           .custom-button{
-            background-color: ${options.color}
-            border-radius: ${options.borderRadius}
-            padding:
-              ${options.size} === "small"
-                ? "6px 12px"
-                : ${options.size} === "medium"
-                ? "8px 16px"
-                : "10px 20px",     
-            border: none,
-            cursor: pointer
+            background-color: ${options.color};
+            border-radius: ${options.borderRadius};
+            padding: ${paddingValue};    
+            border: none ;
+            cursor: pointer;
+            color: white;
           }
         </style>
         `;
@@ -66,11 +69,13 @@ function CodeDisplay({ componentType, options }: displayType) {
                 style={{ backgroundColor: "${options.backgroundColor}",
                 borderRadius: "${options.borderRadius}",
                 boxShadow:
-                  "${options.shadow}" === "small"
-                    ? "2px 2px 5px rgba(0, 0, 0, 0.3)"
-                    : "${options.shadow}" === "medium"
-                    ? "5px 5px 10px rgba(0, 0, 0, 0.3)"
-                    : "8px 8px 15px rgba(0, 0, 0, 0.3)",
+                  ${
+                    options.shadow === "small"
+                      ? "'2px 2px 5px rgba(0, 0, 0, 0.3)'"
+                      : options.shadow === "medium"
+                      ? "'5px 5px 10px rgba(0, 0, 0, 0.3)'"
+                      : "'8px 8px 15px rgba(0, 0, 0, 0.3)'"
+                  },
                 padding: "${options.padding}",
                 overflow: "hidden",
                 cursor: "pointer"

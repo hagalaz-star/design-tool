@@ -20,6 +20,7 @@ function OptionsPanel<T extends ComponentType>({
     switch (componentType) {
       case "button":
         const buttonOptions = options as ComponentOptionsTypeMap["button"];
+
         return (
           <div className={styles.OptionsPanel}>
             <div className={styles.optionItem}>
@@ -96,19 +97,24 @@ function OptionsPanel<T extends ComponentType>({
 
             <div className={styles.optionItem}>
               <label>명암</label>
-              <input
-                type="color"
+              <select
                 value={cardOptions.shadow}
                 onChange={(e) => onOptionChange("shadow", e.target.value)}
-              />
+              >
+                <option value="small">작게</option>
+                <option value="medium">중간</option>
+                <option value="large">크게</option>
+              </select>
             </div>
 
             <div className={styles.optionItem}>
               <label>넓이 조절</label>
               <input
                 type="number"
-                value={cardOptions.padding}
-                onChange={(e) => onOptionChange("padding", e.target.value)}
+                value={parseInt(cardOptions.padding)}
+                onChange={(e) =>
+                  onOptionChange("padding", `${e.target.value}px`)
+                }
               />
             </div>
           </div>
@@ -138,11 +144,13 @@ function OptionsPanel<T extends ComponentType>({
             </div>
 
             <div className={styles.optionItem}>
-              <label>높이</label>
+              <label>높이 (px)</label>
               <input
                 type="number"
-                value={navbarOptions.height}
-                onChange={(e) => onOptionChange("height", e.target.value)}
+                value={parseInt(navbarOptions.height)}
+                onChange={(e) =>
+                  onOptionChange("height", `${e.target.value}px`)
+                }
               />
             </div>
 
@@ -152,6 +160,15 @@ function OptionsPanel<T extends ComponentType>({
                 type="text"
                 value={String(navbarOptions.logo)}
                 onChange={(e) => onOptionChange("logo", e.target.value)}
+              />
+            </div>
+
+            <div className={styles.optionItem}>
+              <label>로고 색깔</label>
+              <input
+                type="color"
+                value={String(navbarOptions.color)}
+                onChange={(e) => onOptionChange("color", e.target.value)}
               />
             </div>
           </div>

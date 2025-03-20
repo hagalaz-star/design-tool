@@ -97,7 +97,7 @@ function ComponentPreview<T extends ComponentType>({
         return (
           <nav style={navbarStyle}>
             <div style={logoStyle}>
-              {String(navbarOptions.logo) ? "로고" : "브랜드명"}
+              {String(navbarOptions.logo) ? navbarOptions.logo : "로고"}
             </div>
             <ul style={menuStyle}>
               <li style={menuItemStyle}>메뉴1</li>

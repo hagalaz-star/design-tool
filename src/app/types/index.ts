@@ -23,8 +23,14 @@ export interface NavbarOptions {
   backgroundColor: string;
   textColor: string;
   height: string;
-  logo: boolean;
+  logo: string;
 }
+
+export type ComponentOptionsTypeMap = {
+  button: ButtonOptions;
+  card: CardOptions;
+  navbar: NavbarOptions;
+};
 
 // // 모든 옵션을 하나의 타입으로 정의
 // export interface ComponentOptions {
@@ -49,9 +55,3 @@ export interface NavbarOptions {
 //   // 기타 필요한 옵션
 //   [key: string]: any;
 // }
-
-export type ComponentOptionsTypeMap = {
-  button: ButtonOptions;
-  card: CardOptions;
-  navbar: NavbarOptions;
-};
