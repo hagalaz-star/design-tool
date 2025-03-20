@@ -1,10 +1,10 @@
 import React, { CSSProperties } from "react";
 import styles from "./ComponentPreview.module.scss";
-import { ComponentType, ComponentOptions } from "@/app/types/index";
+import { ComponentType, ComponentOptionsTypeMap } from "@/app/types/index";
 
 interface previewType<T extends ComponentType> {
-  componentType: ComponentType;
-  options: ComponentOptions[T];
+  componentType: T;
+  options: ComponentOptionsTypeMap[T];
 }
 
 function ComponentPreview<T extends ComponentType>({
@@ -14,13 +14,14 @@ function ComponentPreview<T extends ComponentType>({
   const renderPreview = () => {
     switch (componentType) {
       case "button":
+        const buttonOptions = options as ComponentOptionsTypeMap["button"];
         const buttonStyle: CSSProperties = {
-          backgroundColor: options.color,
-          borderRadius: options.borderRadius,
+          backgroundColor: buttonOptions.color,
+          borderRadius: buttonOptions.borderRadius,
           padding:
-            options.size === "small"
+            buttonOptions.size === "small"
               ? "6px 12px"
-              : options.size === "medium"
+              : buttonOptions.size === "medium"
               ? "8px 16px"
               : "10px 20px",
           // 추가 스타일 요소
@@ -30,38 +31,44 @@ function ComponentPreview<T extends ComponentType>({
           textAlign: "center",
           textDecoration: "none",
           fontSize:
-            options.size === "small"
+            buttonOptions.size === "small"
               ? "14px"
-              : options.size === "medium"
+              : buttonOptions.size === "medium"
               ? "16px"
               : "18px",
           transition: "all 0.2s ease",
           boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
         };
-        return <button style={buttonStyle}>{options.text || "버튼"}</button>;
+        return (
+          <button style={buttonStyle}>{buttonOptions.text || "버튼"}</button>
+        );
       case "card":
+        const cardOptions = options as ComponentOptionsTypeMap["card"];
         const cardStyle: CSSProperties = {
-          backgroundColor: options.backgroundColor,
-          borderRadius: options.borderRadius,
+          backgroundColor: cardOptions.backgroundColor,
+          borderRadius: cardOptions.borderRadius,
           boxShadow:
-            options.shadow === "small"
+            cardOptions.shadow === "small"
               ? "2px 2px 5px rgba(0, 0, 0, 0.3)"
-              : options.shadow === "medium"
+              : cardOptions.shadow === "medium"
               ? "5px 5px 10px rgba(0, 0, 0, 0.3)"
               : "8px 8px 15px rgba(0, 0, 0, 0.3)",
-          padding: options.padding,
+          padding: cardOptions.padding,
           overflow: "hidden",
           cursor: "pointer",
           transform: "translateY(-3px)",
           transition: "box-shadow 0.3s ease, transform 0.3s ease",
         };
-        return <div style={cardStyle}>{options.children || "카드 내용"}</div>;
+        return (
+          <div style={cardStyle}>{cardOptions.children || "카드 내용"}</div>
+        );
 
       case "navbar":
+        const navbarOptions = options as ComponentOptionsTypeMap["navbar"];
         const navbarStyle: CSSProperties = {
-          backgroundColor: options.backgroundColor,
-          color: options.color,
-          height: options.height,
+          backgroundColor: navbarOptions.backgroundColor,
+          color: navbarOptions.color,
+          height: navbarOptions.height,
           alignItems: "center",
           display: "flex",
           justifyContent: "space-between",
@@ -85,11 +92,13 @@ function ComponentPreview<T extends ComponentType>({
 
         const menuItemStyle: CSSProperties = {
           cursor: "pointer",
-          color: options.textColor,
+          color: navbarOptions.textColor,
         };
         return (
           <nav style={navbarStyle}>
-            <div style={logoStyle}>{options.logo ? "로고" : "브랜드명"}</div>
+            <div style={logoStyle}>
+              {String(navbarOptions.logo) ? "로고" : "브랜드명"}
+            </div>
             <ul style={menuStyle}>
               <li style={menuItemStyle}>메뉴1</li>
               <li style={menuItemStyle}>메뉴2</li>

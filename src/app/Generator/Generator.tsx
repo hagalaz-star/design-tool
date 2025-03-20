@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import OptionsPanel from "./OptionsPanel";
 import ComponentPreview from "./ComponentPreview";
 import CodeDisplay from "./CodeDisplay";
-import { ComponentType, ComponentOptions } from "@/app/types/index";
+import { ComponentType, ComponentOptionsTypeMap } from "@/app/types/index";
 
 function Generator() {
   // 선택된 컴포넌트 타입
@@ -13,7 +13,9 @@ function Generator() {
     useState<ComponentType>("button");
 
   // 컴포넌트 옵션 (간단하게 시작)
-  const [Options, setOptions] = useState<ComponentOptions>({
+  const [Options, setOptions] = useState<
+    ComponentOptionsTypeMap[ComponentType]
+  >({
     color: " #3a86ff",
     size: "medium",
     borderRadius: "4px",
@@ -51,6 +53,7 @@ function Generator() {
       });
     } else if (newType === "navbar") {
       setOptions({
+        color: "#B3C3FF",
         backgroundColor: "#333333",
         textColor: "#ffffff",
         height: "60px",

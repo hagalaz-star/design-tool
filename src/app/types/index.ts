@@ -19,31 +19,39 @@ export interface CardOptions {
 }
 
 export interface NavbarOptions {
+  color: string;
   backgroundColor: string;
   textColor: string;
   height: string;
   logo: boolean;
 }
-// 모든 옵션을 하나의 타입으로 정의
-export interface ComponentOptions {
-  // 버튼 옵션
-  color?: string;
-  size?: "small" | "medium" | "large";
-  text?: string;
 
-  // 카드 옵션
-  backgroundColor?: string;
-  shadow?: "small" | "medium" | "large";
+// // 모든 옵션을 하나의 타입으로 정의
+// export interface ComponentOptions {
+//   // 버튼 옵션
+//   color?: string;
+//   size?: "small" | "medium" | "large";
+//   text?: string;
 
-  // 공통 옵션
-  borderRadius?: string;
-  padding?: string;
+//   // 카드 옵션
+//   backgroundColor?: string;
+//   shadow?: "small" | "medium" | "large";
 
-  // 네비바 옵션
-  textColor?: string;
-  height?: string;
-  logo?: boolean;
+//   // 공통 옵션
+//   borderRadius?: string;
+//   padding?: string;
 
-  // 기타 필요한 옵션
-  [key: string]: any;
-}
+//   // 네비바 옵션
+//   textColor?: string;
+//   height?: string;
+//   logo?: boolean;
+
+//   // 기타 필요한 옵션
+//   [key: string]: any;
+// }
+
+export type ComponentOptionsTypeMap = {
+  button: ButtonOptions;
+  card: CardOptions;
+  navbar: NavbarOptions;
+};

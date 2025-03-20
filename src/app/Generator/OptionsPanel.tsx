@@ -2,12 +2,12 @@
 
 import React from "react";
 import styles from "./OptionsPanel.module.scss";
-import { ComponentType, ComponentOptions } from "@/app/types/index";
+import { ComponentType, ComponentOptionsTypeMap } from "@/app/types/index";
 
 // Props 타입 정의
 interface OptionsPanelProps<T extends ComponentType> {
   componentType: T;
-  options: ComponentOptions[T];
+  options: ComponentOptionsTypeMap[T];
   onOptionChange: (name: string, value: any) => void;
 }
 
@@ -19,13 +19,14 @@ function OptionsPanel<T extends ComponentType>({
   const renderOptions = () => {
     switch (componentType) {
       case "button":
+        const buttonOptions = options as ComponentOptionsTypeMap["button"];
         return (
           <div className={styles.OptionsPanel}>
             <div className={styles.optionItem}>
               <label>색상</label>
               <input
                 type="color"
-                value={options.color}
+                value={buttonOptions.color}
                 onChange={(e) => onOptionChange("color", e.target.value)}
               />
             </div>
@@ -33,7 +34,7 @@ function OptionsPanel<T extends ComponentType>({
             <div className={styles.optionItem}>
               <label>크기</label>
               <select
-                value={options.size}
+                value={buttonOptions.size}
                 onChange={(e) => onOptionChange("size", e.target.value)}
               >
                 <option value="small">작게</option>
@@ -48,7 +49,7 @@ function OptionsPanel<T extends ComponentType>({
                 type="range"
                 min="0"
                 max="20"
-                value={parseInt(options.borderRadius)}
+                value={parseInt(buttonOptions.borderRadius)}
                 onChange={(e) =>
                   onOptionChange("borderRadius", `${e.target.value}px`)
                 }
@@ -58,20 +59,22 @@ function OptionsPanel<T extends ComponentType>({
               <label>텍스트</label>
               <input
                 type="text"
-                value={options.text}
+                value={buttonOptions.text}
                 onChange={(e) => onOptionChange("text", e.target.value)}
               />
             </div>
           </div>
         );
       case "card":
+        const cardOptions = options as ComponentOptionsTypeMap["card"];
+
         return (
           <div>
             <div className={styles.optionItem}>
               <label>배경색</label>
               <input
                 type="color"
-                value={options.backgroundColor}
+                value={cardOptions.backgroundColor}
                 onChange={(e) =>
                   onOptionChange("backgroundColor", e.target.value)
                 }
@@ -84,7 +87,7 @@ function OptionsPanel<T extends ComponentType>({
                 type="range"
                 min="0"
                 max="10"
-                value={parseInt(options.borderRadius)}
+                value={parseInt(cardOptions.borderRadius)}
                 onChange={(e) =>
                   onOptionChange("borderRadius", `${e.target.value}px`)
                 }
@@ -95,7 +98,7 @@ function OptionsPanel<T extends ComponentType>({
               <label>명암</label>
               <input
                 type="color"
-                value={options.shadow}
+                value={cardOptions.shadow}
                 onChange={(e) => onOptionChange("shadow", e.target.value)}
               />
             </div>
@@ -104,20 +107,21 @@ function OptionsPanel<T extends ComponentType>({
               <label>넓이 조절</label>
               <input
                 type="number"
-                value={options.padding}
+                value={cardOptions.padding}
                 onChange={(e) => onOptionChange("padding", e.target.value)}
               />
             </div>
           </div>
         );
       case "navbar":
+        const navbarOptions = options as ComponentOptionsTypeMap["navbar"];
         return (
           <div>
             <div className={styles.optionItem}>
               <label>배경색</label>
               <input
                 type="color"
-                value={options.backgroundColor}
+                value={navbarOptions.backgroundColor}
                 onChange={(e) =>
                   onOptionChange("backgroundColor", e.target.value)
                 }
@@ -128,7 +132,7 @@ function OptionsPanel<T extends ComponentType>({
               <label>텍스트 색깔</label>
               <input
                 type="color"
-                value={options.textColor}
+                value={navbarOptions.textColor}
                 onChange={(e) => onOptionChange("textColor", e.target.value)}
               />
             </div>
@@ -137,7 +141,7 @@ function OptionsPanel<T extends ComponentType>({
               <label>높이</label>
               <input
                 type="number"
-                value={options.height}
+                value={navbarOptions.height}
                 onChange={(e) => onOptionChange("height", e.target.value)}
               />
             </div>
@@ -146,7 +150,7 @@ function OptionsPanel<T extends ComponentType>({
               <label>로고</label>
               <input
                 type="text"
-                value={options.logo}
+                value={String(navbarOptions.logo)}
                 onChange={(e) => onOptionChange("logo", e.target.value)}
               />
             </div>
