@@ -2,10 +2,103 @@
 
 import styles from "./Generator.module.scss";
 import React, { useState } from "react";
-import OptionsPanel from "./OptionsPanel";
-import ComponentPreview from "./ComponentPreview";
-import CodeDisplay from "./CodeDisplay";
-import { ComponentType, ComponentOptionsTypeMap } from "@/app/types/index";
+
+import ButtonCode from "../Button/ButtonCodeGenerator";
+import ButtonOptionsPanel from "../Button/ButtonOptions";
+import ButtonPreview from "../Button/ButtonPreview";
+
+import CardCode from "../Card/CardCodeGenerator";
+import CardOptionsPanel from "../Card/CardOptions";
+import CardPreview from "../Card/CardPreview";
+
+import NavbarCode from "../Navbar/NavbarCodeGenerator";
+import NavbarOptionsPanel from "../Navbar/NavbarOptions";
+import NavbarPreview from "../Navbar/NavbarPreview";
+
+import {
+  ComponentType,
+  ComponentOptionsTypeMap,
+  ButtonOptions,
+  CardOptions,
+  NavbarOptions,
+} from "@/types/index";
+
+// OptionsPanel 컴포넌트 - 컴포넌트 타입에 따라 적절한 옵션 패널을 렌더링
+function OptionsPanel({
+  componentType,
+  options,
+  onOptionChange,
+}: {
+  componentType: ComponentType;
+  options: ComponentOptionsTypeMap[ComponentType];
+  onOptionChange: (name: string, value: any) => void;
+}) {
+  switch (componentType) {
+    case "button":
+      return (
+        <ButtonOptionsPanel
+          options={options as ButtonOptions}
+          onOptionChange={onOptionChange}
+        />
+      );
+    case "card":
+      return (
+        <CardOptionsPanel
+          options={options as CardOptions}
+          onOptionChange={onOptionChange}
+        />
+      );
+    case "navbar":
+      return (
+        <NavbarOptionsPanel
+          options={options as NavbarOptions}
+          onOptionChange={onOptionChange}
+        />
+      );
+    default:
+      return null;
+  }
+}
+
+// ComponentPreview 컴포넌트 - 컴포넌트 타입에 따라 적절한 미리보기를 렌더링
+function ComponentPreview({
+  componentType,
+  options,
+}: {
+  componentType: ComponentType;
+  options: ComponentOptionsTypeMap[ComponentType];
+}) {
+  switch (componentType) {
+    case "button":
+      return <ButtonPreview options={options as ButtonOptions} />;
+    case "card":
+      return <CardPreview options={options as CardOptions} />;
+    case "navbar":
+      return <NavbarPreview options={options as NavbarOptions} />;
+    default:
+      return null;
+  }
+}
+
+// CodeDisplay 컴포넌트 - 컴포넌트 타입에 따라 적절한 코드 생성기를 렌더링
+function CodeDisplay({
+  componentType,
+  options,
+}: {
+  componentType: ComponentType;
+  options: ComponentOptionsTypeMap[ComponentType];
+}) {
+  switch (componentType) {
+    case "button":
+      return <ButtonCode options={options as ButtonOptions} />;
+    case "card":
+      return <CardCode options={options as CardOptions} />;
+    case "navbar":
+      return <NavbarCode options={options as NavbarOptions} />;
+    default:
+      return null;
+  }
+}
 
 function Generator() {
   // 선택된 컴포넌트 타입
@@ -68,7 +161,7 @@ function Generator() {
         <h2>컴포넌트 선택</h2>
         <div className={styles.typeButtons}>
           <button
-            className={`${styles.typeButtons} ${
+            className={`${styles.typeButton} ${
               selectedComponent === "button" ? styles.active : ""
             }`}
             onClick={() => handleComponentTypeChange("button")}
@@ -76,7 +169,7 @@ function Generator() {
             버튼
           </button>
           <button
-            className={`${styles.typeButtons} ${
+            className={`${styles.typeButton} ${
               selectedComponent === "card" ? styles.active : ""
             }`}
             onClick={() => handleComponentTypeChange("card")}
@@ -84,7 +177,7 @@ function Generator() {
             카드
           </button>
           <button
-            className={`${styles.typeButtons} ${
+            className={`${styles.typeButton} ${
               selectedComponent === "navbar" ? styles.active : ""
             }`}
             onClick={() => handleComponentTypeChange("navbar")}
@@ -93,7 +186,7 @@ function Generator() {
           </button>
         </div>
 
-        {/* {기존 컴포넌트 선택 UI} */}
+        {/* 옵션 패널 */}
         <div className={styles.workArea}>
           <OptionsPanel
             componentType={selectedComponent}
@@ -102,7 +195,7 @@ function Generator() {
           />
         </div>
 
-        {/* {미리보기 섹션} */}
+        {/* 미리보기 섹션 */}
         <div className={styles.previewSection}>
           <h3>미리보기</h3>
           <div className={styles.previewContainer}>
@@ -113,7 +206,7 @@ function Generator() {
           </div>
         </div>
 
-        {/* {코드 디스플레이 섹션 추가} */}
+        {/* 코드 디스플레이 섹션 */}
         <div className={styles.codeSection}>
           <h3>코드</h3>
           <CodeDisplay componentType={selectedComponent} options={Options} />

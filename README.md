@@ -15,19 +15,26 @@ bun dev
 ```
 
 ```
-app/
-├── layout.tsx (메인 레이아웃)
-├── page.tsx (홈페이지)
-├── globals.scss (전역 스타일)
-└── components/
-├── Generator/
-│ ├── Generator.tsx (컴포넌트 제너레이터 메인)
-│ ├── Generator.module.scss (스타일)
-│ ├── ComponentPreview.tsx (미리보기 영역)
-│ ├── ComponentPreview.module.scss
-│ ├── OptionsPanel.tsx (옵션 선택 패널)
-│ ├── OptionsPanel.module.scss
-│ └── CodeDisplay.tsx (생성된 코드 표시)
-│ └── CodeDisplay.module.scss
-└── UI/ (미리 정의된 UI 컴포넌트들)
+src/
+├── app/
+│   ├── page.tsx
+│   ├── layout.tsx
+│   └── globals.scss
+├── components/
+│   ├── Generator/
+│   │   └── index.tsx  # 메인 Generator 컴포넌트 (기존과 동일)
+│   ├── Button/
+│   │   ├── ButtonOptions.tsx
+│   │   ├── ButtonPreview.tsx
+│   │   └── ButtonCodeGenerator.ts
+│   ├── Card/
+│   │   ├── CardOptions.tsx
+│   │   ├── CardPreview.tsx
+│   │   └── CardCodeGenerator.ts
+│   └── Navbar/
+│       ├── NavbarOptions.tsx
+│       ├── NavbarPreview.tsx
+│       └── NavbarCodeGenerator.ts
+└── types/
+    └── index.ts  # 기존 타입 정의 (개선된 버전)
 ```
