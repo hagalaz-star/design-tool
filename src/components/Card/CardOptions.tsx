@@ -49,8 +49,17 @@ function CardOptionsPanel({ options, onOptionChange }: CardOptionsProps) {
           <label>넓이 조절</label>
           <input
             type="number"
-            value={parseInt(options.padding)}
+            value={parseInt(options.padding) || 0}
             onChange={(e) => onOptionChange("padding", `${e.target.value}px`)}
+          />
+        </div>
+
+        <div className={styles.optionItem}>
+          <label>타이틀 색상 </label>
+          <input
+            type="color"
+            value={options.color}
+            onChange={(e) => onOptionChange("color", e.target.value)}
           />
         </div>
       </div>

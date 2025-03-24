@@ -8,6 +8,7 @@ interface CardPreviewProps {
 
 function CardPreview({ options }: CardPreviewProps) {
   const cardStyle: CSSProperties = {
+    color: options.color,
     backgroundColor: options.backgroundColor,
     borderRadius: options.borderRadius,
     boxShadow:

@@ -33,7 +33,7 @@ function NavbarOptionsPanel({ options, onOptionChange }: NavbarOptionsProps) {
           <label>높이 (px)</label>
           <input
             type="number"
-            value={parseInt(options.height)}
+            value={parseInt(options.height) || 0}
             onChange={(e) => onOptionChange("height", `${e.target.value}px`)}
           />
         </div>

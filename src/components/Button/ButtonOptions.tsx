@@ -15,8 +15,8 @@ function ButtonOptionsPanel({ options, onOptionChange }: ButtonOptionsProps) {
           <label>색상</label>
           <input
             type="color"
-            value={options.color}
-            onChange={(e) => onOptionChange("color", e.target.value)}
+            value={options.backgroundColor}
+            onChange={(e) => onOptionChange("backgroundColor", e.target.value)}
           />
         </div>
 
@@ -50,6 +50,15 @@ function ButtonOptionsPanel({ options, onOptionChange }: ButtonOptionsProps) {
             type="text"
             value={options.text}
             onChange={(e) => onOptionChange("text", e.target.value)}
+          />
+        </div>
+
+        <div className={styles.optionItem}>
+          <label>텍스트 색상 </label>
+          <input
+            type="color"
+            value={String(options.color)}
+            onChange={(e) => onOptionChange("color", e.target.value)}
           />
         </div>
       </div>

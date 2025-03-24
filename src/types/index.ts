@@ -4,10 +4,11 @@ export type ComponentType = "button" | "card" | "navbar";
 // 컴포넌트 옵션 타입 정의
 
 export interface ButtonOptions {
-  color: string;
+  backgroundColor: string;
   size: "small" | "medium" | "large";
   borderRadius: string;
   text: string;
+  color: string;
 }
 
 export interface CardOptions {
@@ -16,6 +17,7 @@ export interface CardOptions {
   shadow: "small" | "medium" | "large";
   padding: string;
   children?: string;
+  color: string;
 }
 
 export interface NavbarOptions {

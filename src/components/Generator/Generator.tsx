@@ -109,6 +109,7 @@ function Generator() {
   const [Options, setOptions] = useState<
     ComponentOptionsTypeMap[ComponentType]
   >({
+    backgroundColor: "#B096AF",
     color: " #3a86ff",
     size: "medium",
     borderRadius: "4px",
@@ -132,10 +133,11 @@ function Generator() {
     // 컴포넌트 타입에 따라 기본 옵션 초기화
     if (newType === "button") {
       setOptions({
-        color: "#3a86ff",
+        backgroundColor: "#3a86ff",
         size: "medium",
         borderRadius: "4px",
         text: "버튼",
+        color: "#B096A5",
       });
     } else if (newType === "card") {
       setOptions({
@@ -143,6 +145,7 @@ function Generator() {
         borderRadius: "8px",
         shadow: "medium",
         padding: "16px",
+        color: "#D9643F",
       });
     } else if (newType === "navbar") {
       setOptions({

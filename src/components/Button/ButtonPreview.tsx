@@ -8,7 +8,7 @@ interface ButtonPreviewProps {
 
 function ButtonPreview({ options }: ButtonPreviewProps) {
   const buttonStyle: CSSProperties = {
-    backgroundColor: options.color,
+    backgroundColor: options.backgroundColor,
     borderRadius: options.borderRadius,
     padding:
       options.size === "small"
@@ -19,7 +19,7 @@ function ButtonPreview({ options }: ButtonPreviewProps) {
     // 추가 스타일 요소
     border: "none",
     cursor: "pointer",
-    color: "white",
+    color: options.color,
     textAlign: "center",
     textDecoration: "none",
     fontSize:
