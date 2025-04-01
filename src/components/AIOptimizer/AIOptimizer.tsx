@@ -37,8 +37,8 @@ function AIOptimizer({
         prompt: optimizationPrompt,
       });
 
-      setGeneratedText(response.data);
-      onApplyOptimized(response.data);
+      setGeneratedText(response.data.text);
+      onApplyOptimized(response.data.text);
     } catch (error: any) {
       setError(error.response?.data?.error || "코드 생성 실패");
     } finally {
@@ -51,6 +51,21 @@ function AIOptimizer({
       <button onClick={handleSubmit} disabled={loading}>
         Ai 최적화 버튼
       </button>
+
+      {loading && <p>AI가 코드를 최적화 하는중...</p>}
+      {error && <p className="error">{error}</p>}
+
+      {generatedText && (
+        <div>
+          <h4>AI가 최적화한 코드</h4>
+          <pre>
+            <code>{generatedText}</code>
+          </pre>
+          <button onClick={() => onApplyOptimized(generatedText)}>
+            이 코드 적용하기
+          </button>
+        </div>
+      )}
     </div>
   );
 }

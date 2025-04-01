@@ -1,7 +1,7 @@
 "use client";
 
 import styles from "./Generator.module.scss";
-import React, { useState } from "react";
+import React, { Component, useMemo, useState } from "react";
 
 import ButtonCode from "../Button/ButtonCodeGenerator";
 import ButtonOptionsPanel from "../Button/ButtonOptions";
@@ -14,6 +14,8 @@ import CardPreview from "../Card/CardPreview";
 import NavbarCode from "../Navbar/NavbarCodeGenerator";
 import NavbarOptionsPanel from "../Navbar/NavbarOptions";
 import NavbarPreview from "../Navbar/NavbarPreview";
+
+import AIOptimizer from "../AIOptimizer/AIOptimizer";
 
 import {
   ComponentType,
@@ -105,6 +107,8 @@ function Generator() {
   const [selectedComponent, setSelectedComponent] =
     useState<ComponentType>("button");
 
+  const [codeFormat, setCodeFormat] = useState<"react" | "html">("react");
+
   // 컴포넌트 옵션 (간단하게 시작)
   const [Options, setOptions] = useState<
     ComponentOptionsTypeMap[ComponentType]
@@ -115,6 +119,12 @@ function Generator() {
     borderRadius: "4px",
     text: "버튼",
   });
+
+  const [optimizerCode, setOptimizerCode] = useState("");
+
+  const handleOptimizedCode = (code: string) => {
+    setOptimizerCode(code);
+  };
 
   // 사용자가 다른 컴포넌트 유형(버튼, 카드, 네비게이션 바 등)을 선택했을 때 처리
   const handleOptionChange = (name: string, value: any) => {
@@ -157,6 +167,238 @@ function Generator() {
       });
     }
   };
+
+  function generatedCurrentCode(
+    componentType: ComponentType,
+    options: ComponentOptionsTypeMap[ComponentType],
+    codeFormat: "react" | "html"
+  ): string {
+    switch (componentType) {
+      case "button":
+        return generateButtonCode(options as ButtonOptions, codeFormat);
+      case "card":
+        return generateCardCode(options as CardOptions, codeFormat);
+
+      case "navbar":
+        return generateNavbarCode(options as NavbarOptions, codeFormat);
+
+      default:
+        return "// 지원 되지않는 컴포넌트입니다";
+    }
+  }
+
+  function generateButtonCode(
+    options: ButtonOptions,
+    codeFormat: "react" | "html"
+  ): string {
+    if (codeFormat === "react") {
+      return `
+  const Button = () => {
+    return (
+      <button 
+        style={{
+          backgroundColor: "${options.backgroundColor}",
+          borderRadius: "${options.borderRadius}",
+          padding: ${
+            options.size === "small"
+              ? "'6px 12px'"
+              : options.size === "medium"
+              ? "'8px 16px'"
+              : "'10px 20px'"
+          },
+          border: "none",
+          cursor: "pointer",
+          color: "${options.color}"
+        }}
+      >
+        ${options.text || "버튼"}
+      </button>
+    );
+  };`;
+    } else if (codeFormat === "html") {
+      const paddingValue =
+        options.size === "small"
+          ? "6px 12px"
+          : options.size === "medium"
+          ? "8px 16px"
+          : "10px 20px";
+
+      return `
+  <button class="custom-button">${options.text || "버튼"}</button>
+  
+  <style>
+    .custom-button {
+      background-color: ${options.backgroundColor};
+      border-radius: ${options.borderRadius};
+      padding: ${paddingValue};    
+      border: none;
+      cursor: pointer;
+      color: ${options.color};
+    }
+  </style>`;
+    }
+
+    return "// 지원되지 않는 포맷입니다.";
+  }
+
+  function generateCardCode(
+    options: CardOptions,
+    codeFormat: "react" | "html"
+  ): string {
+    if (codeFormat === "react") {
+      return `
+        const Card = () => {
+          return (
+            <div 
+                style={{ backgroundColor: "${options.backgroundColor}",
+                borderRadius: "${options.borderRadius}",
+                boxShadow:
+                  ${
+                    options.shadow === "small"
+                      ? "'2px 2px 5px rgba(0, 0, 0, 0.3)'"
+                      : options.shadow === "medium"
+                      ? "'5px 5px 10px rgba(0, 0, 0, 0.3)'"
+                      : "'8px 8px 15px rgba(0, 0, 0, 0.3)'"
+                  },
+                padding: "${options.padding}",
+                overflow: "hidden",
+                cursor: "pointer"
+                }
+              }
+          > ${options.children || "카드 내용"}
+          </div>
+        )
+        }
+        `;
+    } else if (codeFormat === "html") {
+      return `
+        <div class="custom-card">${options.children || "카드 내용"}</div>
+        
+        <style>
+        .custom-card {
+            backgroundColor: ${options.backgroundColor},
+            borderRadius: ${options.borderRadius},
+            boxShadow:
+              ${options.shadow} === "small"
+                ? "2px 2px 5px rgba(0, 0, 0, 0.3)"
+                : ${options.shadow} === "medium"
+                ? "5px 5px 10px rgba(0, 0, 0, 0.3)"
+                : "8px 8px 15px rgba(0, 0, 0, 0.3)",
+            padding: ${options.padding},
+            overflow: "hidden",
+            cursor: "pointer"
+          }
+        </style>
+        `;
+    }
+    return "// 지원되지 않는 컴포넌트 또는 포맷입니다.";
+  }
+
+  function generateNavbarCode(
+    options: NavbarOptions,
+    codeFormat: "react" | "html"
+  ): string {
+    if (codeFormat === "react") {
+      return `
+          const navbarStyle = ()=> ({
+                backgroundColor: "${options.backgroundColor}",
+                color: "${options.color}",
+                height: "${options.height}",
+                alignItems: "center",
+                display: "flex",
+                justifyContent: "space-between",
+                boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+                padding: "0 20px",
+                width: "100%",
+            }) 
+          const logoStyle = ()=>{
+            return ({        
+                fontWeight: "bold",
+                fontSize: "1.2rem",
+              })
+          }
+          const menuStyle = () => {
+            return({
+                  display: "flex",
+                  listStyle: "none",
+                  gap: "20px",
+                  margin: 0,
+                  padding: 0,
+              })
+          }
+          const menuItemStyle =()=> {
+            return ({ 
+                cursor: "pointer",
+                color: "${options.textColor}"
+              })
+            };
+
+            return (
+              <nav style={navbarStyle}>
+                  <div style={logoStyle}>{${options.logo} ? "로고" : "브랜드명"}</div>
+                  <ul style={menuStyle}>
+                    <li style={menuItemStyle}>메뉴1</li>
+                    <li style={menuItemStyle}>메뉴2</li>
+                    <li style={menuItemStyle}>메뉴3</li>
+                  </ul>
+              </nav>
+              );
+            `;
+    } else if (codeFormat === "html") {
+      return `
+            <nav style={navbarStyle}>
+            <div style={logoStyle}>{${options.logo} ? "로고" : "브랜드명"}</div>
+            <ul style={menuStyle}>
+              <li style={menuItemStyle}>메뉴1</li>
+              <li style={menuItemStyle}>메뉴2</li>
+              <li style={menuItemStyle}>메뉴3</li>
+            </ul>
+          </nav>
+
+          <style>.navbarStyle
+              {
+                backgroundColor: ${options.backgroundColor},
+                color: ${options.color},
+                height: ${options.height},
+                alignItems: "center",
+                display: "flex",
+                justifyContent: "space-between",
+                boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+                padding: "0 20px",
+                width: "100%",
+          }
+          </style>
+
+          <style>.logoStyle
+          {
+            fontWeight: "bold",
+            fontSize: "1.2rem",
+          }
+          </style>
+          
+          <style>.menuStyle{
+            display: "flex",
+            listStyle: "none",
+            gap: "20px",
+            margin: 0,
+            padding: 0,
+          }
+          </style>
+
+          <style>.menuItemStyle{
+              cursor: "pointer",
+              color: ${options.textColor},
+          }
+          </style>
+        
+        `;
+    }
+    return "// 지원되지 않는 컴포넌트 또는 포맷입니다.";
+  }
+
+  const currentCodeString = useMemo(() => {
+    return generatedCurrentCode(selectedComponent, Options, codeFormat);
+  }, [selectedComponent, Options, codeFormat]);
 
   return (
     <div className={styles.generatorContainer}>
@@ -213,6 +455,16 @@ function Generator() {
         <div className={styles.codeSection}>
           <h3>코드</h3>
           <CodeDisplay componentType={selectedComponent} options={Options} />
+        </div>
+
+        <div>
+          <AIOptimizer
+            currentCode={currentCodeString}
+            componentType={selectedComponent}
+            options={Options}
+            codeFormat="react"
+            onApplyOptimized={handleOptimizedCode}
+          />
         </div>
       </div>
     </div>

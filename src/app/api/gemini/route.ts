@@ -18,7 +18,9 @@ export async function POST(request: Request) {
     const model = genAi.getGenerativeModel({ model: "gemini-2.0-flash-lite" });
     const result = await model.generateContent(prompt);
     const response = result.response;
-    return response.text();
+    const textResponse = await response.text();
+
+    return NextResponse.json({ text: textResponse });
   } catch (error) {
     console.error("Error generating code:", error);
     return NextResponse.json(
