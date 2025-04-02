@@ -1,12 +1,15 @@
-// OptionsPanel.module.scss
-.OptionsPanel {
+// Button.module.scss - 개선된 버전
+
+// 옵션 패널 스타일
+.optionsPanel {
   background-color: white;
   border-radius: 8px;
   padding: 1.5rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  margin-bottom: 1.5rem;
 
   h3 {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.25rem;
     font-size: 1.4rem;
     color: #444;
     font-weight: 500;
@@ -31,6 +34,7 @@
     border-radius: 4px;
     background-color: #f9f9f9;
     font-size: 0.95rem;
+    transition: all 0.2s ease;
 
     &:focus {
       outline: none;
@@ -54,8 +58,79 @@
   }
 }
 
-// CodeDisplay.module.scss
-.CodeDisplay {
+// 버튼 컴포넌트 스타일 (직접 컴포넌트에 적용 가능)
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: inherit;
+  text-align: center;
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+
+  // 크기 변형
+  &.small {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+  }
+
+  &.medium {
+    padding: 8px 16px;
+    font-size: 1rem;
+  }
+
+  &.large {
+    padding: 10px 20px;
+    font-size: 1.1rem;
+  }
+
+  // 상호작용 효과
+  &:hover {
+    filter: brightness(1.05);
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    filter: brightness(0.95);
+    transform: translateY(1px);
+  }
+
+  // 접근성 포커스 스타일
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  // 아이콘이 있는 버튼용 스타일
+  .icon {
+    display: inline-flex;
+    margin-right: 8px;
+  }
+
+  // 버튼 로딩 상태
+  &.loading {
+    opacity: 0.7;
+    cursor: not-allowed;
+
+    .loadingSpinner {
+      margin-right: 8px;
+      animation: spin 1s linear infinite;
+    }
+  }
+
+  // 비활성화 상태
+  &.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+}
+
+// 코드 디스플레이 스타일
+.codeDisplay {
   position: relative;
   margin-top: 1rem;
 }
@@ -70,6 +145,7 @@
     border: none;
     font-size: 0.9rem;
     cursor: pointer;
+    transition: background-color 0.2s;
 
     &:first-child {
       border-radius: 4px 0 0 4px;
@@ -82,6 +158,10 @@
     &.active {
       background-color: var(--color-primary);
       color: white;
+    }
+
+    &:hover:not(.active) {
+      background-color: #e9ecef;
     }
   }
 }
@@ -116,5 +196,32 @@
 
   &:hover {
     background-color: rgba(255, 255, 255, 0.2);
+  }
+
+  &.copied {
+    background-color: rgba(39, 174, 96, 0.2);
+    color: #27ae60;
+  }
+}
+
+// 미리보기 영역
+.previewContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  min-height: 100px;
+  margin-bottom: 1.5rem;
+}
+
+// 애니메이션
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
   }
 }

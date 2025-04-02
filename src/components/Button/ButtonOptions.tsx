@@ -67,6 +67,7 @@ function ButtonOptionsPanel({ options, onOptionChange }: ButtonOptionsProps) {
   return (
     <div className={styles.OptionsPanel}>
       <h3>옵션 설정</h3>
+      <br></br>
       {renderOptions()}
     </div>
   );

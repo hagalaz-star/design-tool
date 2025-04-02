@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { ComponentType, ComponentOptionsTypeMap } from "../../types/index";
 import axios from "axios";
+import styles from "./AIOptimizer.module.scss";
 
 interface AIOptimizerProps {
   currentCode: string; // 현재 코드
@@ -47,21 +48,32 @@ function AIOptimizer({
   };
 
   return (
-    <div>
-      <button onClick={handleSubmit} disabled={loading}>
-        Ai 최적화 버튼
+    <div className={styles.optimizerContainer}>
+      <h3 className={styles.optimizerTitle}>AI 코드 최적화</h3>
+      <br></br>
+      <button
+        onClick={handleSubmit}
+        disabled={loading}
+        className={styles.optimizeButton}
+      >
+        AI 최적화 버튼
       </button>
 
-      {loading && <p>AI가 코드를 최적화 하는중...</p>}
-      {error && <p className="error">{error}</p>}
+      {loading && (
+        <p className={styles.loadingMessage}>AI가 코드를 최적화 하는중...</p>
+      )}
+      {error && <p className={styles.error}>{error}</p>}
 
       {generatedText && (
-        <div>
-          <h4>AI가 최적화한 코드</h4>
-          <pre>
+        <div className={styles.resultContainer}>
+          <h4 className={styles.resultTitle}>AI가 최적화한 코드</h4>
+          <pre className={styles.codeDisplay}>
             <code>{generatedText}</code>
           </pre>
-          <button onClick={() => onApplyOptimized(generatedText)}>
+          <button
+            onClick={() => onApplyOptimized(generatedText)}
+            className={styles.applyButton}
+          >
             이 코드 적용하기
           </button>
         </div>
