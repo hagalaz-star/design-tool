@@ -116,7 +116,9 @@ function Generator() {
     handleComponentTypeChange,
   } = useComponentOptions();
 
-  const [codeFormat, setCodeFormat] = useState<"react" | "html">("react");
+  const [codeFormat, setCodeFormat] = useState<"react-tailwind" | "react-scss">(
+    "react-tailwind"
+  );
 
   const OptionsComponent = componentConfig[selectedComponent]
     .Component as React.ComponentType<{
@@ -143,7 +145,7 @@ function Generator() {
   function generatedCurrentCode(
     componentType: ComponentType,
     options: ComponentOptionsTypeMap[ComponentType],
-    codeFormat: "react" | "html"
+    codeFormat: "react-tailwind" | "react-scss"
   ): string {
     switch (componentType) {
       case "button":
@@ -226,7 +228,7 @@ function Generator() {
             currentCode={currentCodeString}
             componentType={selectedComponent}
             options={componentOptions}
-            codeFormat="react"
+            codeFormat={codeFormat}
             onApplyOptimized={handleOptimizedCode}
           />
         </div>

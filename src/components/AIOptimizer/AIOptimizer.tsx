@@ -7,7 +7,7 @@ interface AIOptimizerProps {
   currentCode: string; // 현재 코드
   componentType: ComponentType; // 디자인 유형
   options: ComponentOptionsTypeMap[ComponentType]; // 디자인 유형 상세 정의
-  codeFormat: "react" | "html"; // 디자인 코드로 나타내는 2종류
+  codeFormat: "react-tailwind" | "react-scss"; // 디자인 코드로 나타내는 2종류
   onApplyOptimized: (optimizedCode: string) => void;
 }
 
@@ -28,10 +28,25 @@ function AIOptimizer({
     setError("");
     setGeneratedText("");
 
-    const optimizationPrompt = `다음 ${codeFormat} 코드를 \n\n\`\`\`${currentCode}\`\`\`\n\n 을 ${componentType}디자인 유형에 맞추어서 ${JSON.stringify(
-      options
-    )} 에 맞춰 최적화로 진행`;
-    setPrompt(optimizationPrompt);
+    const optimizationPrompt = `코드 최적화 요청:
+    - 형식: ${codeFormat === "react-tailwind" ? "React tailwind" : "react-scss"}
+    - 컴포넌트: ${componentType}
+    - 옵션: ${JSON.stringify(options)}
+    
+    ${
+      codeFormat === "react-tailwind"
+        ? "목표: Tailwind CSS 클래스를 활용한 재사용 가능한 컴포넌트, 모든 스타일은 Tailwind 클래스로만 구현"
+        : "목표: CSS 모듈과 SCSS를 활용한 재사용 가능한 컴포넌트, 스타일은 별도의 SCSS 모듈에 정의"
+    }
+    
+    원본 코드:
+    \`\`\`
+    ${currentCode}
+    \`\`\`
+    
+    중요: 지시사항을 정확히 따라 ${
+      codeFormat === "react-tailwind" ? "Tailwind CSS" : "SCSS"
+    } 형식으로만 결과를 제공하세요. 코드만 반환하고 설명은 포함하지 마세요.`;
 
     try {
       const response = await axios.post("/api/gemini", {
