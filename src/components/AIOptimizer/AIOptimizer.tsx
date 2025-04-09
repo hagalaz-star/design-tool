@@ -18,15 +18,15 @@ function AIOptimizer({
   codeFormat,
   onApplyOptimized,
 }: AIOptimizerProps) {
-  const [prompt, setPrompt] = useState(""); // 최적화 코드
-  const [generatedText, setGeneratedText] = useState(""); // 원본코드
+  const [originalCode, setOriginalCode] = useState(""); // 원본코드
+  const [optimizedCode, setOptimizedCode] = useState(""); // 최적화 코드
   const [loading, setLoading] = useState(false); // 로딩
   const [error, setError] = useState("");
 
   const handleSubmit = async () => {
     setLoading(true);
     setError("");
-    setGeneratedText("");
+    setOptimizedCode("");
 
     const optimizationPrompt = `코드 최적화 요청:
     - 형식: ${codeFormat === "react-tailwind" ? "React tailwind" : "react-scss"}
@@ -39,10 +39,7 @@ function AIOptimizer({
         : "목표: CSS 모듈과 SCSS를 활용한 재사용 가능한 컴포넌트, 스타일은 별도의 SCSS 모듈에 정의"
     }
     
-    원본 코드:
-    \`\`\`
-    ${currentCode}
-    \`\`\`
+   Please optimize the following code snippet:\n\n\`\`\`javascript\n${originalCode}\n\`\`\`;
     
     중요: 지시사항을 정확히 따라 ${
       codeFormat === "react-tailwind" ? "Tailwind CSS" : "SCSS"
@@ -53,8 +50,9 @@ function AIOptimizer({
         prompt: optimizationPrompt,
       });
 
-      setGeneratedText(response.data.text);
-      onApplyOptimized(response.data.text);
+      const resultText = response.data.text;
+      setOptimizedCode(resultText);
+      onApplyOptimized(resultText);
     } catch (error: any) {
       setError(error.response?.data?.error || "코드 생성 실패");
     } finally {
@@ -79,14 +77,14 @@ function AIOptimizer({
       )}
       {error && <p className={styles.error}>{error}</p>}
 
-      {generatedText && (
+      {optimizedCode && (
         <div className={styles.resultContainer}>
           <h4 className={styles.resultTitle}>AI가 최적화한 코드</h4>
           <pre className={styles.codeDisplay}>
-            <code>{generatedText}</code>
+            <code>{optimizedCode}</code>
           </pre>
           <button
-            onClick={() => onApplyOptimized(generatedText)}
+            onClick={() => onApplyOptimized(optimizedCode)}
             className={styles.applyButton}
           >
             이 코드 적용하기

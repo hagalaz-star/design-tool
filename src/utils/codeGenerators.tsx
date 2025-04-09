@@ -281,18 +281,22 @@ export function generateNavbarCode(
 }
 
 export function CodeDisplay({
+  codeFormat,
   componentType,
   options,
   styles,
+  onFormatChange,
 }: {
+  codeFormat: "react-tailwind" | "react-scss";
   componentType: ComponentType;
   options: ComponentOptionsTypeMap[ComponentType];
   styles: Record<string, string>;
+  onFormatChange?: (format: "react-tailwind" | "react-scss") => void;
 }) {
-  const [codeFormat, setCodeFormat] = useState<"react-tailwind" | "react-scss">(
-    "react-tailwind"
-  );
-  const [generatedCode, setGeneratedCode] = useState("");
+  // 버튼 클릭 핸들러 수정
+  const handleFormatChange = (format: "react-tailwind" | "react-scss") => {
+    if (onFormatChange) onFormatChange(format);
+  };
 
   const generateCode = () => {
     switch (componentType) {
@@ -320,7 +324,7 @@ export function CodeDisplay({
           className={`${styles.formatButton} ${
             codeFormat === "react-tailwind" ? styles.active : ""
           }`}
-          onClick={() => setCodeFormat("react-tailwind")}
+          onClick={() => handleFormatChange("react-tailwind")}
         >
           Tailwind
         </button>
@@ -328,7 +332,7 @@ export function CodeDisplay({
           className={`${styles.formatButton} ${
             codeFormat === "react-scss" ? styles.active : ""
           }`}
-          onClick={() => setCodeFormat("react-scss")}
+          onClick={() => handleFormatChange("react-scss")}
         >
           Scss
         </button>

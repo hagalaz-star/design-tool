@@ -5,11 +5,19 @@ import { CodeDisplay } from "@/utils/codeGenerators";
 
 interface ButtonCodeType {
   options: ButtonOptions;
+  codeFormat: "react-tailwind" | "react-scss";
+  onFormatChange: (format: "react-tailwind" | "react-scss") => void;
 }
 
-function ButtonCode({ options }: ButtonCodeType) {
+function ButtonCode({ options, codeFormat, onFormatChange }: ButtonCodeType) {
   return (
-    <CodeDisplay componentType="button" options={options} styles={styles} />
+    <CodeDisplay
+      codeFormat={codeFormat}
+      componentType="button"
+      options={options}
+      styles={styles}
+      onFormatChange={onFormatChange}
+    />
   );
 }
 

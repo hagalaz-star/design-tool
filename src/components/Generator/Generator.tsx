@@ -134,12 +134,18 @@ function Generator() {
   const CodeComponent = componentConfig[selectedComponent]
     .CodeGenerator as React.ComponentType<{
     options: any;
+    codeFormat: "react-tailwind" | "react-scss";
   }>;
 
   const [optimizerCode, setOptimizerCode] = useState("");
 
   const handleOptimizedCode = (code: string) => {
     setOptimizerCode(code);
+  };
+
+  // 포맷 연결 시키기
+  const handleFotmatChange = (format: "react-tailwind" | "react-scss") => {
+    setCodeFormat(format);
   };
 
   function generatedCurrentCode(
@@ -220,7 +226,11 @@ function Generator() {
         {/* 코드 디스플레이 섹션 */}
         <div className={styles.codeSection}>
           <h3>코드</h3>
-          <CodeComponent options={componentOptions} />
+          <CodeComponent
+            options={componentOptions}
+            codeFormat={codeFormat}
+            onformatChange={handleFotmatChange}
+          />
         </div>
 
         <div>
