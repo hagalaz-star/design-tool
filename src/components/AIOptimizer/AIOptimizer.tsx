@@ -18,7 +18,6 @@ function AIOptimizer({
   codeFormat,
   onApplyOptimized,
 }: AIOptimizerProps) {
-  const [originalCode, setOriginalCode] = useState(""); // 원본코드
   const [optimizedCode, setOptimizedCode] = useState(""); // 최적화 코드
   const [loading, setLoading] = useState(false); // 로딩
   const [error, setError] = useState("");
@@ -39,7 +38,7 @@ function AIOptimizer({
         : "목표: CSS 모듈과 SCSS를 활용한 재사용 가능한 컴포넌트, 스타일은 별도의 SCSS 모듈에 정의"
     }
     
-   Please optimize the following code snippet:\n\n\`\`\`javascript\n${originalCode}\n\`\`\`;
+   Please optimize the following code snippet:\n\n\`\`\`javascript\n${currentCode}\n\`\`\`;
     
     중요: 지시사항을 정확히 따라 ${
       codeFormat === "react-tailwind" ? "Tailwind CSS" : "SCSS"

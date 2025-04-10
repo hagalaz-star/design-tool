@@ -2,6 +2,11 @@
 export type ComponentType = "button" | "card" | "navbar";
 
 // 컴포넌트 옵션 타입 정의
+export type ComponentOptionsTypeMap = {
+  button: ButtonOptions;
+  card: CardOptions;
+  navbar: NavbarOptions;
+};
 
 export interface ButtonOptions {
   backgroundColor: string;
@@ -27,12 +32,6 @@ export interface NavbarOptions {
   height: string;
   logo: string;
 }
-
-export type ComponentOptionsTypeMap = {
-  button: ButtonOptions;
-  card: CardOptions;
-  navbar: NavbarOptions;
-};
 
 // // 모든 옵션을 하나의 타입으로 정의
 // export interface ComponentOptions {

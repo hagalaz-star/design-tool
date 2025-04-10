@@ -295,7 +295,8 @@ export function CodeDisplay({
 }) {
   // 버튼 클릭 핸들러 수정
   const handleFormatChange = (format: "react-tailwind" | "react-scss") => {
-    if (onFormatChange) onFormatChange(format);
+    onFormatChange?.(format);
+    console.log(onFormatChange?.(format));
   };
 
   const generateCode = () => {

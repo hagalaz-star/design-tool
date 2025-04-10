@@ -1,7 +1,7 @@
 import React from "react";
 import { ButtonOptions } from "@/types";
 import styles from "./Button.module.scss";
-import { CodeDisplay } from "@/utils/codeGenerators";
+import { CodeDisplay } from "@/utils/CodeDisplay";
 
 interface ButtonCodeType {
   options: ButtonOptions;

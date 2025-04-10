@@ -21,7 +21,7 @@ import {
   generateButtonCode,
   generateCardCode,
   generateNavbarCode,
-} from "../../utils/codeGenerators";
+} from "../../utils/CodeDisplay";
 
 import {
   ComponentType,
@@ -76,6 +76,9 @@ const componentConfig = {
   },
 };
 
+// 컴포넌트 선택과 옵션 설정을 캡슐화 하였다
+// 컴포넌트와 그에 따른 옵션 관리에 집중하고 싶었다.
+// 왜?? Generator  함수를 더 단순하고 알아보기 쉽게 코드를 만들고 싶어서
 function useComponentOptions(initialType: ComponentType = "button") {
   const [selectedComponent, setSelectedComponent] =
     useState<ComponentType>(initialType);
@@ -135,6 +138,7 @@ function Generator() {
     .CodeGenerator as React.ComponentType<{
     options: any;
     codeFormat: "react-tailwind" | "react-scss";
+    onFormatChange?: (format: "react-tailwind" | "react-scss") => void;
   }>;
 
   const [optimizerCode, setOptimizerCode] = useState("");
@@ -229,7 +233,7 @@ function Generator() {
           <CodeComponent
             options={componentOptions}
             codeFormat={codeFormat}
-            onformatChange={handleFotmatChange}
+            onFormatChange={handleFotmatChange}
           />
         </div>
 
