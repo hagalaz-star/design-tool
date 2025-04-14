@@ -60,7 +60,7 @@ export function generateButtonCode(
     }
 
     return `
-      <button className={styles.button + ' ' + .${sizeClass}}>
+      <button className={button ${sizeClass}}>
         ${options.text || "버튼"}
       </button>
       

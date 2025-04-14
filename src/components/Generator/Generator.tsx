@@ -16,6 +16,7 @@ import NavbarOptionsPanel from "../Navbar/NavbarOptions";
 import NavbarPreview from "../Navbar/NavbarPreview";
 
 import AIOptimizer from "../AIOptimizer/AIOptimizer";
+import AiDesign from "../AIDesign/AiDesign";
 
 import {
   generateButtonCode,
@@ -123,6 +124,11 @@ function Generator() {
     "react-tailwind"
   );
 
+  // ai 코드를 받는 저장 공간
+  const [optimizerCode, setOptimizerCode] = useState("");
+
+  // 중복적으로 사용될 코드를 각 컴포넌트끼리 합쳐서 리터럴 객체를 만듬
+  // ? 버튼 카트 네이바 중복으로 된 코드들이 많다
   const OptionsComponent = componentConfig[selectedComponent]
     .Component as React.ComponentType<{
     options: any;
@@ -141,17 +147,18 @@ function Generator() {
     onFormatChange?: (format: "react-tailwind" | "react-scss") => void;
   }>;
 
-  const [optimizerCode, setOptimizerCode] = useState("");
-
+  // ai 코드  업데이트 함수
   const handleOptimizedCode = (code: string) => {
     setOptimizerCode(code);
   };
 
-  // 포맷 연결 시키기
-  const handleFotmatChange = (format: "react-tailwind" | "react-scss") => {
+  // format 연결 시키기
+  const handleFormatChange = (format: "react-tailwind" | "react-scss") => {
     setCodeFormat(format);
   };
 
+  // 선택된 컴포넌트 타입, 옵션, 코드 포맷에 따라 적절한 코드를 생성하는 함수
+  // 코드 생성 로직을 분리하여 Generator 컴포넌트의 복잡도를 줄이고 재사용성을 높임
   function generatedCurrentCode(
     componentType: ComponentType,
     options: ComponentOptionsTypeMap[ComponentType],
@@ -172,6 +179,7 @@ function Generator() {
     }
   }
 
+  // 컴포넌트 타입 , 옵션 , 코드포맷으로 재생성하여 성능 최적화
   const currentCodeString = useMemo(() => {
     return generatedCurrentCode(
       selectedComponent,
@@ -179,6 +187,10 @@ function Generator() {
       codeFormat
     );
   }, [selectedComponent, componentOptions, codeFormat]);
+
+  const onSelectDesign = (code: string) => {
+    setOptimizerCode(code);
+  };
 
   return (
     <div className={styles.generatorContainer}>
@@ -233,7 +245,7 @@ function Generator() {
           <CodeComponent
             options={componentOptions}
             codeFormat={codeFormat}
-            onFormatChange={handleFotmatChange}
+            onFormatChange={handleFormatChange}
           />
         </div>
 
@@ -244,6 +256,13 @@ function Generator() {
             options={componentOptions}
             codeFormat={codeFormat}
             onApplyOptimized={handleOptimizedCode}
+          />
+        </div>
+
+        <div>
+          <AiDesign
+            componentType={selectedComponent}
+            onSelectDesign={onSelectDesign}
           />
         </div>
       </div>
