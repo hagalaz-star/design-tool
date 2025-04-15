@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { Axios } from "axios";
 import styles from "./AiDesign.module.scss";
 import React, { useState } from "react";
 import { ComponentType } from "../../types/index";
@@ -25,21 +25,23 @@ function AiDesign({ componentType, onSelectDesign }: AiDesignProps) {
     setLoading(true);
     setError("");
     setDesignVariant([]);
+
     // API 요청을 통해 여러 디자인 변형 생성 요청
     try {
       const promptText = `Create 4 different design styles for a ${componentType} component:
-            1. Minimalist
-            2. Neumorphic
-            3. Glassmorphic
-            4. Material Design
+      1. Minimalist
+      2. Neumorphic
+      3. Glassmorphic
+      4. Material Design
     
-            For each style, provide:
-            - Style name
-            - Complete React code using Tailwind CSS
-            - A brief description of the style
-
-            Format your response as JSON with this structure:
-            {
+      For each style, provide:
+      - Style name
+      - Complete React code using Tailwind CSS
+      - A brief description of the style
+    
+      IMPORTANT: Return ONLY a valid JSON object with NO markdown formatting or code blocks.
+      The JSON must follow this exact structure:
+      {
         "variants": [
           {
             "designName": "Style name",
@@ -47,35 +49,32 @@ function AiDesign({ componentType, onSelectDesign }: AiDesignProps) {
             "description": "Brief description"
           },
           ...
-        
-        }`;
+        ]
+      }`;
+
       const response = await axios.post("/api/gemini", {
         prompt: promptText,
       });
 
-      try {
-        const responsetext = response.data.text;
-        const responseData = JSON.parse(responsetext);
+      // 응답 텍스트 처리 및 JSON 파싱을 단일 try-catch 내에서
 
-        if (responseData.variants && Array.isArray(responseData.variants)) {
-          setDesignVariant(responseData.variants);
-          console.log(responseData.variants);
+      const responseData = response.data;
 
-          if (responseData.length === 0) {
-            setError("에러입니다 다시 시도해 주세요 ");
-          }
+      if (responseData.json && responseData.json.variant) {
+        setDesignVariant(responseData.json.variant);
+        console.log(responseData.json.variants);
+
+        if (responseData.data.variant === 0) {
+          setError("에러입니다 다시 시도해 주세요");
         } else {
           setError("API 응답에 디자인 변형이 없습니다");
         }
-      } catch (parseError) {
-        console.error("JSON 파싱 오류:", parseError);
-        setError("디자인 데이터 파싱에 실패했습니다. 다시 시도해주세요.");
       }
     } catch (ApiError: any) {
       console.error("API 요청 오류:", ApiError);
       setError(
-        ApiError.response?.data?.error ||
-          "데이터 로드에 실패했습니다. 다시 시도해주세요."
+        ApiError.responseData?.data?.error ||
+          "데이터 로드에 실패했습니다 다시 시도해 주세요"
       );
     } finally {
       setLoading(false);
