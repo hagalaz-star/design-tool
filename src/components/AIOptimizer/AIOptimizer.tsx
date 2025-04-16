@@ -57,7 +57,6 @@ function AIOptimizer({
 
       const resultText = response.data.text;
       setOptimizedCode(resultText);
-      onApplyOptimized(resultText);
     } catch (error: any) {
       setError(error.response?.data?.error || "코드 생성 실패");
     } finally {

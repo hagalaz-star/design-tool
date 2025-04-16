@@ -1,15 +1,21 @@
 import React from "react";
 import styles from "./Navbar.module.scss";
-import { CodeDisplay } from "@/utils/CodeDisplay";
 import { NavbarOptions } from "@/types";
+import { CodeDisplay } from "@/utils/CodeDisplay";
 
 interface NavbarType {
   options: NavbarOptions;
   codeFormat: "react-tailwind" | "react-scss";
   onFormatChange: (format: "react-tailwind" | "react-scss") => void;
+  customCode: string | null;
 }
 
-function NavbarCode({ options, codeFormat, onFormatChange }: NavbarType) {
+function NavbarCode({
+  options,
+  codeFormat,
+  onFormatChange,
+  customCode,
+}: NavbarType) {
   return (
     <CodeDisplay
       componentType="navbar"
@@ -17,6 +23,7 @@ function NavbarCode({ options, codeFormat, onFormatChange }: NavbarType) {
       styles={styles}
       codeFormat={codeFormat}
       onFormatChange={onFormatChange}
+      customCode={customCode}
     />
   );
 }

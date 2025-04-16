@@ -1,7 +1,7 @@
 "use client";
 
 import styles from "./Generator.module.scss";
-import React, { Component, useMemo, useState } from "react";
+import React, { Component, useEffect, useMemo, useState } from "react";
 
 import ButtonCode from "../Button/ButtonCodeGenerator";
 import ButtonOptionsPanel from "../Button/ButtonOptions";
@@ -119,13 +119,18 @@ function Generator() {
     handleOptionChange,
     handleComponentTypeChange,
   } = useComponentOptions();
-
+  // 사용자가 tailwind / scss 버튼 고르는 상황
   const [codeFormat, setCodeFormat] = useState<"react-tailwind" | "react-scss">(
     "react-tailwind"
   );
 
-  // ai 코드를 받는 저장 공간
-  const [optimizerCode, setOptimizerCode] = useState("");
+  // ai 추천 코드 적용 상태 관리
+  const [customCode, setCustomCode] = useState<string | null>(null);
+
+  // useEffect를 추가하면 selectedComponent가 변경될 때마다 customCode가 초기화됨
+  useEffect(() => {
+    setCustomCode(null);
+  }, [selectedComponent]);
 
   // 중복적으로 사용될 코드를 각 컴포넌트끼리 합쳐서 리터럴 객체를 만듬
   // ? 버튼 카트 네이바 중복으로 된 코드들이 많다
@@ -145,11 +150,16 @@ function Generator() {
     options: any;
     codeFormat: "react-tailwind" | "react-scss";
     onFormatChange?: (format: "react-tailwind" | "react-scss") => void;
+    customCode: string | null;
   }>;
 
   // ai 코드  업데이트 함수
   const handleOptimizedCode = (code: string) => {
-    setOptimizerCode(code);
+    setCustomCode(code);
+  };
+
+  const onSelectDesign = (code: string) => {
+    setCustomCode(code);
   };
 
   // format 연결 시키기
@@ -187,10 +197,6 @@ function Generator() {
       codeFormat
     );
   }, [selectedComponent, componentOptions, codeFormat]);
-
-  const onSelectDesign = (code: string) => {
-    setOptimizerCode(code);
-  };
 
   return (
     <div className={styles.generatorContainer}>
@@ -246,6 +252,7 @@ function Generator() {
             options={componentOptions}
             codeFormat={codeFormat}
             onFormatChange={handleFormatChange}
+            customCode={customCode}
           />
         </div>
 

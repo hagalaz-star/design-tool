@@ -7,9 +7,15 @@ interface CardeCodeType {
   options: CardOptions;
   codeFormat: "react-tailwind" | "react-scss";
   onFormatChange: (format: "react-tailwind" | "react-scss") => void;
+  customCode: string | null;
 }
 
-function CardCode({ options, codeFormat, onFormatChange }: CardeCodeType) {
+function CardCode({
+  options,
+  codeFormat,
+  onFormatChange,
+  customCode,
+}: CardeCodeType) {
   return (
     <CodeDisplay
       componentType="card"
@@ -17,6 +23,7 @@ function CardCode({ options, codeFormat, onFormatChange }: CardeCodeType) {
       styles={styles}
       codeFormat={codeFormat}
       onFormatChange={onFormatChange}
+      customCode={customCode}
     />
   );
 }

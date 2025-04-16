@@ -286,12 +286,14 @@ export function CodeDisplay({
   options,
   styles,
   onFormatChange,
+  customCode,
 }: {
   codeFormat: "react-tailwind" | "react-scss";
   componentType: ComponentType;
   options: ComponentOptionsTypeMap[ComponentType];
   styles: Record<string, string>;
   onFormatChange?: (format: "react-tailwind" | "react-scss") => void;
+  customCode: string | null;
 }) {
   // 버튼 클릭 핸들러 수정
   const handleFormatChange = (format: "react-tailwind" | "react-scss") => {
@@ -300,6 +302,9 @@ export function CodeDisplay({
   };
 
   const generateCode = () => {
+    if (customCode) {
+      return customCode;
+    }
     switch (componentType) {
       case "button":
         return generateButtonCode(options as ButtonOptions, codeFormat);
@@ -316,7 +321,7 @@ export function CodeDisplay({
     document.querySelectorAll("pre code").forEach((block) => {
       hljs.highlightElement(block as HTMLElement);
     });
-  }, [options, codeFormat, componentType]);
+  }, [options, codeFormat, componentType, customCode]);
 
   return (
     <div className={styles.CodeDisplay}>
@@ -341,7 +346,9 @@ export function CodeDisplay({
 
       <pre
         className={styles.codeBlock}
-        key={`${componentType}-${codeFormat}-${JSON.stringify(options)}`}
+        key={`${componentType}-${codeFormat}-${JSON.stringify(options)}-${
+          customCode ? "custom" : "generated"
+        }`}
       >
         <code>{generateCode()}</code>
       </pre>

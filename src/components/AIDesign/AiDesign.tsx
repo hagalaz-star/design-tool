@@ -33,6 +33,8 @@ function AiDesign({ componentType, onSelectDesign }: AiDesignProps) {
       2. Neumorphic
       3. Glassmorphic
       4. Material Design
+      5. Skeuomorphic
+      6. Brutalist
     
       For each style, provide:
       - Style name

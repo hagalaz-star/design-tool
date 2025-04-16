@@ -1,15 +1,21 @@
 import React from "react";
-import { ButtonOptions } from "@/types";
 import styles from "./Button.module.scss";
+import { ButtonOptions } from "@/types";
 import { CodeDisplay } from "@/utils/CodeDisplay";
 
 interface ButtonCodeType {
   options: ButtonOptions;
   codeFormat: "react-tailwind" | "react-scss";
   onFormatChange: (format: "react-tailwind" | "react-scss") => void;
+  customCode: string | null;
 }
 
-function ButtonCode({ options, codeFormat, onFormatChange }: ButtonCodeType) {
+function ButtonCode({
+  options,
+  codeFormat,
+  onFormatChange,
+  customCode,
+}: ButtonCodeType) {
   return (
     <CodeDisplay
       codeFormat={codeFormat}
@@ -17,6 +23,7 @@ function ButtonCode({ options, codeFormat, onFormatChange }: ButtonCodeType) {
       options={options}
       styles={styles}
       onFormatChange={onFormatChange}
+      customCode={customCode}
     />
   );
 }
