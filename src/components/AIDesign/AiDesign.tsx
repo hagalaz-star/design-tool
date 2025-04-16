@@ -60,15 +60,16 @@ function AiDesign({ componentType, onSelectDesign }: AiDesignProps) {
 
       const responseData = response.data;
 
-      if (responseData.json && responseData.json.variant) {
-        setDesignVariant(responseData.json.variant);
+      if (responseData.json && responseData.json.variants) {
+        setDesignVariant(responseData.json.variants);
         console.log(responseData.json.variants);
 
-        if (responseData.data.variant === 0) {
-          setError("에러입니다 다시 시도해 주세요");
-        } else {
-          setError("API 응답에 디자인 변형이 없습니다");
+        if (responseData.json.variants.length === 0) {
+          setError("디자인 변형이 없습니다");
         }
+        // 디자인 변형이 성공적으로 받아졌을 때는 에러 메시지를 설정하지 않음
+      } else {
+        setError("API 응답에 디자인 변형이 없습니다");
       }
     } catch (ApiError: any) {
       console.error("API 요청 오류:", ApiError);
@@ -89,11 +90,11 @@ function AiDesign({ componentType, onSelectDesign }: AiDesignProps) {
         disabled={loading}
         className={styles.recommendButton}
       >
-        AI 추천 버튼
+        AI 추천 디자인 버튼
       </button>
 
       {loading && (
-        <p className={styles.loadingMessage}>AI가 코드를 최적화 하는중...</p>
+        <p className={styles.loadingMessage}>AI가 디자인 추천 하는중...</p>
       )}
 
       {error && <p className={styles.errorMessage}>{error}</p>}
