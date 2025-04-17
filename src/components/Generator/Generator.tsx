@@ -32,140 +32,134 @@ import {
   NavbarOptions,
 } from "@/types/index";
 
-const ButtonDefaults: ButtonOptions = {
-  backgroundColor: "#3a86ff",
-  size: "medium",
-  borderRadius: "4px",
-  text: "버튼",
-  color: "#B096A5",
-};
-
-const CardDefaults: CardOptions = {
-  backgroundColor: "#ffffff",
-  borderRadius: "8px",
-  shadow: "medium",
-  padding: "16px",
-  color: "#D9643F",
-};
-
-const NavbarDefaults: NavbarOptions = {
-  color: "#B3C3FF",
-  backgroundColor: "#333333",
-  textColor: "#ffffff",
-  height: "60px",
-  logo: "",
-};
+import useComponentStore from "@/store/useComponentStore";
 
 const componentConfig = {
   button: {
     Component: ButtonOptionsPanel,
     Preview: ButtonPreview,
     CodeGenerator: ButtonCode,
-    defaultOptions: ButtonDefaults,
   },
   card: {
     Component: CardOptionsPanel,
     Preview: CardPreview,
     CodeGenerator: CardCode,
-    defaultOptions: CardDefaults,
   },
   navbar: {
     Component: NavbarOptionsPanel,
     Preview: NavbarPreview,
     CodeGenerator: NavbarCode,
-    defaultOptions: NavbarDefaults,
   },
 };
 
 // 컴포넌트 선택과 옵션 설정을 캡슐화 하였다
 // 컴포넌트와 그에 따른 옵션 관리에 집중하고 싶었다.
 // 왜?? Generator  함수를 더 단순하고 알아보기 쉽게 코드를 만들고 싶어서
-function useComponentOptions(initialType: ComponentType = "button") {
-  const [selectedComponent, setSelectedComponent] =
-    useState<ComponentType>(initialType);
+// function useComponentOptions(initialType: ComponentType = "button") {
+//   const [selectedComponent, setSelectedComponent] =
+//     useState<ComponentType>(initialType);
 
-  const [componentOptions, setComponentOptions] = useState<
-    ComponentOptionsTypeMap[ComponentType]
-  >(componentConfig[initialType].defaultOptions);
+//   const [componentOptions, setComponentOptions] = useState<
+//     ComponentOptionsTypeMap[ComponentType]
+//   >(componentConfig[initialType].defaultOptions);
 
-  // 사용자가 다른 컴포넌트 유형(버튼, 카드, 네비게이션 바 등)을 선택했을 때 처리
-  const handleOptionChange = (name: string, value: any) => {
-    console.log(`옵션 변경: ${name}=${value}`);
-    setComponentOptions((prev) => {
-      const newOptions = { ...prev, [name]: value };
-      console.log("새 상태:", newOptions);
-      return newOptions;
-    });
-  };
+//   // 사용자가 다른 컴포넌트 유형(버튼, 카드, 네비게이션 바 등)을 선택했을 때 처리
+//   const handleOptionChange = (name: string, value: any) => {
+//     console.log(`옵션 변경: ${name}=${value}`);
+//     setComponentOptions((prev) => {
+//       const newOptions = { ...prev, [name]: value };
+//       console.log("새 상태:", newOptions);
+//       return newOptions;
+//     });
+//   };
 
-  // 사용자가 컴포넌트의 개별 속성(색상, 크기, 둥근 모서리 등)을 변경할 때 처리
-  const handleComponentTypeChange = (newType: ComponentType) => {
-    setSelectedComponent(newType);
-    setComponentOptions(componentConfig[newType].defaultOptions);
-  };
+//   // 사용자가 컴포넌트의 개별 속성(색상, 크기, 둥근 모서리 등)을 변경할 때 처리
+//   const handleComponentTypeChange = (newType: ComponentType) => {
+//     setSelectedComponent(newType);
+//     setComponentOptions(componentConfig[newType].defaultOptions);
+//   };
 
-  return {
-    selectedComponent,
-    componentOptions,
-    handleOptionChange,
-    handleComponentTypeChange,
-  };
-}
+//   return {
+//     selectedComponent,
+//     componentOptions,
+//     handleOptionChange,
+//     handleComponentTypeChange,
+//   };
+// }
 
 function Generator() {
   const {
     selectedComponent,
     componentOptions,
-    handleOptionChange,
-    handleComponentTypeChange,
-  } = useComponentOptions();
-  // 사용자가 tailwind / scss 버튼 고르는 상황
-  const [codeFormat, setCodeFormat] = useState<"react-tailwind" | "react-scss">(
-    "react-tailwind"
-  );
+    codeFormat,
+    customCode,
+    setSelectedComponent,
+    setComponentOptions,
+    setCodeFormat,
+    setCustomCode,
+  } = useComponentStore();
 
-  // ai 추천 코드 적용 상태 관리
-  const [customCode, setCustomCode] = useState<string | null>(null);
+  // 사용자가 다른 컴포넌트 유형(버튼, 카드, 네비게이션 바 등)을 선택했을 때 처리
+  const handleOptionChange = (name: string, value: any) => {
+    console.log(`옵션 변경: ${name}=${value}`);
+
+    const newOptions = { ...componentOptions, [name]: value };
+    console.log("새 상태:", newOptions);
+
+    setComponentOptions(name as any, value);
+
+    return newOptions;
+  };
+
+  // 컴포넌트 타입 변경 핸들러
+  const handleComponentTypeChange = (newType: ComponentType) => {
+    setSelectedComponent(newType);
+  };
+
+  // 옵션 변경 핸들러
+  const handleFormatChange = (format: "react-tailwind" | "react-scss") => {
+    setCodeFormat(format);
+  };
+  // AI 최적화 코드 적용 핸들러
+  const handleOptimizedCode = (code: string) => {
+    setCustomCode(code);
+  };
+
+  // AI 디자인 선택 핸들러
+  const onSelectDesign = (code: string) => {
+    setCustomCode(code);
+  };
 
   // useEffect를 추가하면 selectedComponent가 변경될 때마다 customCode가 초기화됨
   useEffect(() => {
     setCustomCode(null);
   }, [selectedComponent]);
 
+  // 현재 컴포넌트에 맞는 컴포넌트 가져오기
+  const OptionsComponent = componentConfig[selectedComponent].Component;
+  const PreviewComponent = componentConfig[selectedComponent].Preview;
+  const CodeComponent = componentConfig[selectedComponent].CodeGenerator;
+
   // 중복적으로 사용될 코드를 각 컴포넌트끼리 합쳐서 리터럴 객체를 만듬
   // ? 버튼 카트 네이바 중복으로 된 코드들이 많다
-  const OptionsComponent = componentConfig[selectedComponent]
-    .Component as React.ComponentType<{
-    options: any;
-    onOptionChange: (name: string, value: any) => void;
-  }>;
+  // const OptionsComponent = componentConfig[selectedComponent]
+  //   .Component as React.ComponentType<{
+  //   options: any;
+  //   onOptionChange: (name: string, value: any) => void;
+  // }>;
 
-  const PreviewComponent = componentConfig[selectedComponent]
-    .Preview as React.ComponentType<{
-    options: any;
-  }>;
+  // const PreviewComponent = componentConfig[selectedComponent]
+  //   .Preview as React.ComponentType<{
+  //   options: any;
+  // }>;
 
-  const CodeComponent = componentConfig[selectedComponent]
-    .CodeGenerator as React.ComponentType<{
-    options: any;
-    codeFormat: "react-tailwind" | "react-scss";
-    onFormatChange?: (format: "react-tailwind" | "react-scss") => void;
-    customCode: string | null;
-  }>;
-
-  // ai 코드  업데이트 함수
-  const handleOptimizedCode = (code: string) => {
-    setCustomCode(code);
-  };
-
-  const onSelectDesign = (code: string) => {
-    setCustomCode(code);
-  };
-
-  // format 연결 시키기
-  const handleFormatChange = (format: "react-tailwind" | "react-scss") => {
-    setCodeFormat(format);
-  };
+  // const CodeComponent = componentConfig[selectedComponent]
+  //   .CodeGenerator as React.ComponentType<{
+  //   options: any;
+  //   codeFormat: "react-tailwind" | "react-scss";
+  //   onFormatChange?: (format: "react-tailwind" | "react-scss") => void;
+  //   customCode: string | null;
+  // }>;
 
   // 선택된 컴포넌트 타입, 옵션, 코드 포맷에 따라 적절한 코드를 생성하는 함수
   // 코드 생성 로직을 분리하여 Generator 컴포넌트의 복잡도를 줄이고 재사용성을 높임
@@ -232,7 +226,7 @@ function Generator() {
         {/* 옵션 패널 */}
         <div className={styles.workArea}>
           <OptionsComponent
-            options={componentOptions}
+            options={componentOptions as any}
             onOptionChange={handleOptionChange}
           />
         </div>
@@ -241,7 +235,7 @@ function Generator() {
         <div className={styles.previewSection}>
           <h3>미리보기</h3>
           <div className={styles.previewContainer}>
-            <PreviewComponent options={componentOptions} />
+            <PreviewComponent options={componentOptions as any} />
           </div>
         </div>
 
@@ -249,7 +243,7 @@ function Generator() {
         <div className={styles.codeSection}>
           <h3>코드</h3>
           <CodeComponent
-            options={componentOptions}
+            options={componentOptions as any}
             codeFormat={codeFormat}
             onFormatChange={handleFormatChange}
             customCode={customCode}
