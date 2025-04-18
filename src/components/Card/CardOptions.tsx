@@ -6,11 +6,10 @@ interface CardOptionsProps {
   options: CardOptions;
   onOptionChange: (name: string, value: any) => void;
 }
-
 function CardOptionsPanel({ options, onOptionChange }: CardOptionsProps) {
   const renderOptions = () => {
     return (
-      <div>
+      <div className={styles.OptionsPanel}>
         <div className={styles.optionItem}>
           <label>배경색</label>
           <input
@@ -21,12 +20,19 @@ function CardOptionsPanel({ options, onOptionChange }: CardOptionsProps) {
         </div>
 
         <div className={styles.optionItem}>
+          <label>텍스트 색상</label>
+          <input
+            type="color"
+            value={options.color}
+            onChange={(e) => onOptionChange("color", e.target.value)}
+          />
+        </div>
+
+        <div className={styles.optionItem}>
           <label>테두리 반경</label>
           <input
-            type="range"
-            min="0"
-            max="10"
-            value={parseInt(options.borderRadius)}
+            type="number"
+            value={parseInt(options.borderRadius) || 0}
             onChange={(e) =>
               onOptionChange("borderRadius", `${e.target.value}px`)
             }
@@ -34,7 +40,7 @@ function CardOptionsPanel({ options, onOptionChange }: CardOptionsProps) {
         </div>
 
         <div className={styles.optionItem}>
-          <label>명암</label>
+          <label>그림자</label>
           <select
             value={options.shadow}
             onChange={(e) => onOptionChange("shadow", e.target.value)}
@@ -46,7 +52,7 @@ function CardOptionsPanel({ options, onOptionChange }: CardOptionsProps) {
         </div>
 
         <div className={styles.optionItem}>
-          <label>넓이 조절</label>
+          <label>내부 여백</label>
           <input
             type="number"
             value={parseInt(options.padding) || 0}
@@ -55,20 +61,72 @@ function CardOptionsPanel({ options, onOptionChange }: CardOptionsProps) {
         </div>
 
         <div className={styles.optionItem}>
-          <label>타이틀 색상 </label>
+          <label>레이아웃</label>
+          <select
+            value={options.layout}
+            onChange={(e) => onOptionChange("layout", e.target.value)}
+          >
+            <option value="vertical">세로</option>
+            <option value="horizontal">가로</option>
+          </select>
+        </div>
+
+        <div className={styles.optionItem}>
+          <label>이미지 위치</label>
+          <select
+            value={options.imagePosition}
+            onChange={(e) => onOptionChange("imagePosition", e.target.value)}
+          >
+            <option value="top">상단</option>
+            <option value="left">좌측</option>
+            <option value="right">우측</option>
+          </select>
+        </div>
+
+        <div className={styles.optionItem}>
+          <label>내용 정렬</label>
+          <select
+            value={options.contentAlignment}
+            onChange={(e) => onOptionChange("contentAlignment", e.target.value)}
+          >
+            <option value="left">좌측</option>
+            <option value="center">중앙</option>
+            <option value="right">우측</option>
+          </select>
+        </div>
+
+        <div className={styles.optionItem}>
+          <label>제목</label>
           <input
-            type="color"
-            value={options.color}
-            onChange={(e) => onOptionChange("color", e.target.value)}
+            type="text"
+            value={options.title}
+            onChange={(e) => onOptionChange("title", e.target.value)}
+          />
+        </div>
+
+        <div className={styles.optionItem}>
+          <label>설명</label>
+          <textarea
+            value={options.description}
+            onChange={(e) => onOptionChange("description", e.target.value)}
+          />
+        </div>
+
+        <div className={styles.optionItem}>
+          <label>이미지 URL</label>
+          <input
+            type="text"
+            value={options.imageUrl}
+            onChange={(e) => onOptionChange("imageUrl", e.target.value)}
           />
         </div>
       </div>
     );
   };
+
   return (
     <div className={styles.OptionsPanel}>
-      <h3>옵션 설정</h3>
-      <br></br>
+      <h3>카드 옵션 설정</h3>
       {renderOptions()}
     </div>
   );

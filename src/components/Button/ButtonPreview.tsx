@@ -9,6 +9,7 @@ interface ButtonPreviewProps {
 function ButtonPreview({ options }: ButtonPreviewProps) {
   const buttonStyle: CSSProperties = {
     backgroundColor: options.backgroundColor,
+    color: options.color,
     borderRadius: options.borderRadius,
     padding:
       options.size === "small"
@@ -16,10 +17,8 @@ function ButtonPreview({ options }: ButtonPreviewProps) {
         : options.size === "medium"
         ? "8px 16px"
         : "10px 20px",
-    // 추가 스타일 요소
     border: "none",
-    cursor: "pointer",
-    color: options.color,
+    cursor: options.disabled ? "not-allowed" : "pointer",
     textAlign: "center",
     textDecoration: "none",
     fontSize:
@@ -28,10 +27,63 @@ function ButtonPreview({ options }: ButtonPreviewProps) {
         : options.size === "medium"
         ? "16px"
         : "18px",
-    transition: "all 0.2s ease",
-    boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+    transition: "all 0.3s ease",
+    opacity: options.disabled ? 0.6 : 1,
+    position: "relative",
+    overflow: "hidden",
   };
-  return <button style={buttonStyle}>{options.text || "버튼"}</button>;
+
+  // 호버 효과 적용
+  const hoverStyle: CSSProperties = {
+    ...buttonStyle,
+    transform:
+      options.hoverEffect === "scale"
+        ? "scale(1.05)"
+        : options.hoverEffect === "lift"
+        ? "translateY(-2px)"
+        : "none",
+    boxShadow:
+      options.hoverEffect === "glow" ? "0 0 10px rgba(0,0,0,0.2)" : "none",
+  };
+
+  // 클릭 효과 적용
+  const clickStyle: CSSProperties = {
+    ...buttonStyle,
+    transform: options.clickEffect === "press" ? "scale(0.95)" : "none",
+  };
+
+  return (
+    <button
+      style={buttonStyle}
+      className={styles.button}
+      disabled={options.disabled}
+      onMouseEnter={(e) => {
+        if (!options.disabled) {
+          Object.assign(e.currentTarget.style, hoverStyle);
+        }
+      }}
+      onMouseLeave={(e) => {
+        if (!options.disabled) {
+          Object.assign(e.currentTarget.style, buttonStyle);
+        }
+      }}
+      onMouseDown={(e) => {
+        if (!options.disabled) {
+          Object.assign(e.currentTarget.style, clickStyle);
+        }
+      }}
+      onMouseUp={(e) => {
+        if (!options.disabled) {
+          Object.assign(e.currentTarget.style, buttonStyle);
+        }
+      }}
+    >
+      {options.text || "버튼"}
+      {options.clickEffect === "ripple" && (
+        <span className={styles.ripple}></span>
+      )}
+    </button>
+  );
 }
 
 export default ButtonPreview;

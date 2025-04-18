@@ -12,11 +12,29 @@ function ButtonOptionsPanel({ options, onOptionChange }: ButtonOptionsProps) {
     return (
       <div className={styles.OptionsPanel}>
         <div className={styles.optionItem}>
-          <label>색상</label>
+          <label>배경색</label>
           <input
             type="color"
             value={options.backgroundColor}
             onChange={(e) => onOptionChange("backgroundColor", e.target.value)}
+          />
+        </div>
+
+        <div className={styles.optionItem}>
+          <label>텍스트 색깔</label>
+          <input
+            type="color"
+            value={options.color}
+            onChange={(e) => onOptionChange("color", e.target.value)}
+          />
+        </div>
+
+        <div className={styles.optionItem}>
+          <label>텍스트</label>
+          <input
+            type="text"
+            value={options.text}
+            onChange={(e) => onOptionChange("text", e.target.value)}
           />
         </div>
 
@@ -35,39 +53,53 @@ function ButtonOptionsPanel({ options, onOptionChange }: ButtonOptionsProps) {
         <div className={styles.optionItem}>
           <label>테두리 반경</label>
           <input
-            type="range"
-            min="0"
-            max="20"
-            value={parseInt(options.borderRadius)}
+            type="number"
+            value={parseInt(options.borderRadius) || 0}
             onChange={(e) =>
               onOptionChange("borderRadius", `${e.target.value}px`)
             }
           />
         </div>
+
         <div className={styles.optionItem}>
-          <label>텍스트</label>
-          <input
-            type="text"
-            value={options.text}
-            onChange={(e) => onOptionChange("text", e.target.value)}
-          />
+          <label>호버 효과</label>
+          <select
+            value={options.hoverEffect}
+            onChange={(e) => onOptionChange("hoverEffect", e.target.value)}
+          >
+            <option value="scale">확대</option>
+            <option value="lift">들기</option>
+            <option value="glow">발광</option>
+          </select>
         </div>
 
         <div className={styles.optionItem}>
-          <label>텍스트 색상 </label>
+          <label>클릭 효과</label>
+          <select
+            value={options.clickEffect}
+            onChange={(e) => onOptionChange("clickEffect", e.target.value)}
+          >
+            <option value="press">누르기</option>
+            <option value="ripple">물결</option>
+            <option value="none">없음</option>
+          </select>
+        </div>
+
+        <div className={styles.optionItem}>
+          <label>비활성화</label>
           <input
-            type="color"
-            value={String(options.color)}
-            onChange={(e) => onOptionChange("color", e.target.value)}
+            type="checkbox"
+            checked={options.disabled}
+            onChange={(e) => onOptionChange("disabled", e.target.checked)}
           />
         </div>
       </div>
     );
   };
+
   return (
     <div className={styles.OptionsPanel}>
-      <h3>옵션 설정</h3>
-      <br></br>
+      <h3>버튼 옵션 설정</h3>
       {renderOptions()}
     </div>
   );

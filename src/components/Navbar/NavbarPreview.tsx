@@ -9,7 +9,7 @@ interface NavbarOptionsProps {
 function NavbarPreview({ options }: NavbarOptionsProps) {
   const navbarStyle: CSSProperties = {
     backgroundColor: options.backgroundColor,
-    color: options.color,
+    color: options.logoColor,
     height: options.height,
     alignItems: "center",
     display: "flex",

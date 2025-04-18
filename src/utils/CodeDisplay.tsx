@@ -158,13 +158,13 @@ export function generateCardCode(
     <div className="bg-[${options.backgroundColor}] text-[${
       options.color
     }] ${roundedClass} ${shadowClass} ${paddingClass} overflow-hidden cursor-pointer transition-all hover:shadow-xl">
-      ${options.children || "카드 내용"}
+      ${options.description || "카드 내용"}
     </div>
     `.trim();
   } else if (codeFormat === "react-scss") {
     return `
   <div className = "styles.card">
-      ${options.children || "카드 내용"}
+      ${options.description || "카드 내용"}
 </div>
 
 .custom-card {
@@ -212,7 +212,7 @@ export function generateNavbarCode(
   <nav className = "flex items-center justify-between bg-[${
     options.backgroundColor
   }] ${heightClass} w-full px-5 shadow-sm">
-    <div className = "font-bold text-[${options.color}] text-xl">
+    <div className = "font-bold text-[${options.logoColor}] text-xl">
         ${options.logo || "브랜드명"}
     </div>
     <ul className="flex gap-5 list-none m-0 p-0">
@@ -250,13 +250,13 @@ export function generateNavbarCode(
             boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
             padding: "0 20px",
             width: "100%",
-            color: ${options.color},
+            color: ${options.logoColor},
       }
 
       .logo {
         fontWeight: "bold",
         fontSize: "1.2rem",
-        color: ${options.color},
+        color: ${options.logoColor},
       }
             
       .menu {
