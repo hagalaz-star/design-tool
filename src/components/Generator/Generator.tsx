@@ -33,6 +33,7 @@ import {
 } from "@/types/index";
 
 import useComponentStore from "@/store/useComponentStore";
+import { config } from "process";
 
 const componentConfig = {
   button: {
@@ -51,41 +52,6 @@ const componentConfig = {
     CodeGenerator: NavbarCode,
   },
 };
-
-// 컴포넌트 선택과 옵션 설정을 캡슐화 하였다
-// 컴포넌트와 그에 따른 옵션 관리에 집중하고 싶었다.
-// 왜?? Generator  함수를 더 단순하고 알아보기 쉽게 코드를 만들고 싶어서
-// function useComponentOptions(initialType: ComponentType = "button") {
-//   const [selectedComponent, setSelectedComponent] =
-//     useState<ComponentType>(initialType);
-
-//   const [componentOptions, setComponentOptions] = useState<
-//     ComponentOptionsTypeMap[ComponentType]
-//   >(componentConfig[initialType].defaultOptions);
-
-//   // 사용자가 다른 컴포넌트 유형(버튼, 카드, 네비게이션 바 등)을 선택했을 때 처리
-//   const handleOptionChange = (name: string, value: any) => {
-//     console.log(`옵션 변경: ${name}=${value}`);
-//     setComponentOptions((prev) => {
-//       const newOptions = { ...prev, [name]: value };
-//       console.log("새 상태:", newOptions);
-//       return newOptions;
-//     });
-//   };
-
-//   // 사용자가 컴포넌트의 개별 속성(색상, 크기, 둥근 모서리 등)을 변경할 때 처리
-//   const handleComponentTypeChange = (newType: ComponentType) => {
-//     setSelectedComponent(newType);
-//     setComponentOptions(componentConfig[newType].defaultOptions);
-//   };
-
-//   return {
-//     selectedComponent,
-//     componentOptions,
-//     handleOptionChange,
-//     handleComponentTypeChange,
-//   };
-// }
 
 function Generator() {
   const {
@@ -136,30 +102,28 @@ function Generator() {
   }, [selectedComponent]);
 
   // 현재 컴포넌트에 맞는 컴포넌트 가져오기
-  const OptionsComponent = componentConfig[selectedComponent].Component;
-  const PreviewComponent = componentConfig[selectedComponent].Preview;
-  const CodeComponent = componentConfig[selectedComponent].CodeGenerator;
+  const CurrentComponent = useMemo(() => {
+    // 현재 선택된 컴포넌트에 대한 타입 지정
+    type CurrentType = typeof selectedComponent;
+    type SelectCurrnet = ComponentOptionsTypeMap[CurrentType];
+    const config = componentConfig[selectedComponent];
 
-  // 중복적으로 사용될 코드를 각 컴포넌트끼리 합쳐서 리터럴 객체를 만듬
-  // ? 버튼 카트 네이바 중복으로 된 코드들이 많다
-  // const OptionsComponent = componentConfig[selectedComponent]
-  //   .Component as React.ComponentType<{
-  //   options: any;
-  //   onOptionChange: (name: string, value: any) => void;
-  // }>;
-
-  // const PreviewComponent = componentConfig[selectedComponent]
-  //   .Preview as React.ComponentType<{
-  //   options: any;
-  // }>;
-
-  // const CodeComponent = componentConfig[selectedComponent]
-  //   .CodeGenerator as React.ComponentType<{
-  //   options: any;
-  //   codeFormat: "react-tailwind" | "react-scss";
-  //   onFormatChange?: (format: "react-tailwind" | "react-scss") => void;
-  //   customCode: string | null;
-  // }>;
+    return {
+      Options: config.Component as React.ComponentType<{
+        options: SelectCurrnet;
+        onOptionChange: (name: string, value: any) => void;
+      }>,
+      Preview: config.Preview as React.ComponentType<{
+        options: SelectCurrnet;
+      }>,
+      Code: config.CodeGenerator as React.ComponentType<{
+        options: SelectCurrnet;
+        codeFormat: "react-tailwind" | "react-scss";
+        onFormatChange: (format: "react-tailwind" | "react-scss") => void;
+        customCode: string | null;
+      }>,
+    };
+  }, [selectedComponent]);
 
   // 선택된 컴포넌트 타입, 옵션, 코드 포맷에 따라 적절한 코드를 생성하는 함수
   // 코드 생성 로직을 분리하여 Generator 컴포넌트의 복잡도를 줄이고 재사용성을 높임
@@ -225,8 +189,8 @@ function Generator() {
 
         {/* 옵션 패널 */}
         <div className={styles.workArea}>
-          <OptionsComponent
-            options={componentOptions as any}
+          <CurrentComponent.Options
+            options={componentOptions}
             onOptionChange={handleOptionChange}
           />
         </div>
@@ -235,15 +199,15 @@ function Generator() {
         <div className={styles.previewSection}>
           <h3>미리보기</h3>
           <div className={styles.previewContainer}>
-            <PreviewComponent options={componentOptions as any} />
+            <CurrentComponent.Preview options={componentOptions} />
           </div>
         </div>
 
         {/* 코드 디스플레이 섹션 */}
         <div className={styles.codeSection}>
           <h3>코드</h3>
-          <CodeComponent
-            options={componentOptions as any}
+          <CurrentComponent.Code
+            options={componentOptions}
             codeFormat={codeFormat}
             onFormatChange={handleFormatChange}
             customCode={customCode}
