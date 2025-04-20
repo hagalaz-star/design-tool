@@ -10,7 +10,7 @@ interface ButtonOptionsProps {
 function ButtonOptionsPanel({ options, onOptionChange }: ButtonOptionsProps) {
   const renderOptions = () => {
     return (
-      <div className={styles.OptionsPanel}>
+      <div className={styles.optionsPanel}>
         <div className={styles.optionItem}>
           <label>배경색</label>
           <input
@@ -54,9 +54,12 @@ function ButtonOptionsPanel({ options, onOptionChange }: ButtonOptionsProps) {
           <label>테두리 반경</label>
           <input
             type="number"
-            value={parseInt(options.borderRadius) || 0}
+            value={options.borderRadius ? parseInt(options.borderRadius) : ""}
             onChange={(e) =>
-              onOptionChange("borderRadius", `${e.target.value}px`)
+              onOptionChange(
+                "borderRadius",
+                e.target.value ? `${e.target.value}px` : ""
+              )
             }
           />
         </div>

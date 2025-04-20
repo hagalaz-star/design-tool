@@ -32,7 +32,7 @@ function CardOptionsPanel({ options, onOptionChange }: CardOptionsProps) {
           <label>테두리 반경</label>
           <input
             type="number"
-            value={parseInt(options.borderRadius) || 0}
+            value={parseInt(options.borderRadius) || ""}
             onChange={(e) =>
               onOptionChange("borderRadius", `${e.target.value}px`)
             }
@@ -55,7 +55,7 @@ function CardOptionsPanel({ options, onOptionChange }: CardOptionsProps) {
           <label>내부 여백</label>
           <input
             type="number"
-            value={parseInt(options.padding) || 0}
+            value={parseInt(options.padding) || ""}
             onChange={(e) => onOptionChange("padding", `${e.target.value}px`)}
           />
         </div>

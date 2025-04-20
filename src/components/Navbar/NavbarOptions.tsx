@@ -26,10 +26,10 @@ function NavbarOptionsPanel({ options, onOptionChange }: NavbarOptionsProps) {
             </div>
 
             <div className={styles.optionSubItem}>
-              <label>높이</label>
+              <label>높이 (px)</label>
               <input
                 type="number"
-                value={parseInt(options.height) || 0}
+                value={parseInt(options.height) || ""}
                 onChange={(e) =>
                   onOptionChange("height", `${e.target.value}px`)
                 }
@@ -47,6 +47,7 @@ function NavbarOptionsPanel({ options, onOptionChange }: NavbarOptionsProps) {
                 type="text"
                 value={options.logo}
                 onChange={(e) => onOptionChange("logo", e.target.value)}
+                placeholder="브랜드명 또는 로고 텍스트"
               />
             </div>
             <div className={styles.optionSubItem}>
@@ -89,7 +90,9 @@ function NavbarOptionsPanel({ options, onOptionChange }: NavbarOptionsProps) {
               <label>메뉴 간격</label>
               <input
                 type="number"
-                value={parseInt(options.menuSpacing) || 0}
+                min="0"
+                max="100"
+                value={parseInt(options.menuSpacing) || ""}
                 onChange={(e) =>
                   onOptionChange("menuSpacing", `${e.target.value}px`)
                 }
@@ -108,7 +111,9 @@ function NavbarOptionsPanel({ options, onOptionChange }: NavbarOptionsProps) {
               <label>글자 크기</label>
               <input
                 type="number"
-                value={parseInt(options.menuFontSize) || 0}
+                min="8"
+                max="32"
+                value={parseInt(options.menuFontSize) || 16}
                 onChange={(e) =>
                   onOptionChange("menuFontSize", `${e.target.value}px`)
                 }
@@ -131,58 +136,19 @@ function NavbarOptionsPanel({ options, onOptionChange }: NavbarOptionsProps) {
         </div>
 
         <div className={styles.optionItem}>
-          <label>반응형 설정</label>
-          <div className={styles.optionGroup}>
-            <div className={styles.optionSubItem}>
-              <label>반응형 기준</label>
-              <select
-                value={options.breakpoint}
-                onChange={(e) => onOptionChange("breakpoint", e.target.value)}
-              >
-                <option value="sm">작은 화면</option>
-                <option value="md">중간 화면</option>
-                <option value="lg">큰 화면</option>
-              </select>
-            </div>
-            <div className={styles.optionSubItem}>
-              <label>모바일 메뉴 아이콘</label>
-              <select
-                value={options.mobileMenuIcon}
-                onChange={(e) =>
-                  onOptionChange("mobileMenuIcon", e.target.value)
-                }
-              >
-                <option value="hamburger">햄버거</option>
-                <option value="dots">점</option>
-                <option value="none">없음</option>
-              </select>
-            </div>
-            <div className={styles.optionSubItem}>
-              <label>모바일 메뉴 색상</label>
-              <input
-                type="color"
-                value={options.mobileMenuColor}
-                onChange={(e) =>
-                  onOptionChange("mobileMenuColor", e.target.value)
-                }
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className={styles.optionItem}>
           <label>효과 설정</label>
           <div className={styles.optionGroup}>
             <div className={styles.optionSubItem}>
-              <label>고정 여부</label>
+              <label>상단 고정</label>
               <input
                 type="checkbox"
                 checked={options.fixed}
                 onChange={(e) => onOptionChange("fixed", e.target.checked)}
               />
             </div>
+
             <div className={styles.optionSubItem}>
-              <label>그림자</label>
+              <label>그림자 효과</label>
               <select
                 value={options.shadow}
                 onChange={(e) => onOptionChange("shadow", e.target.value)}
@@ -193,30 +159,7 @@ function NavbarOptionsPanel({ options, onOptionChange }: NavbarOptionsProps) {
                 <option value="large">크게</option>
               </select>
             </div>
-            <div className={styles.optionSubItem}>
-              <label>투명도</label>
-              <input
-                type="checkbox"
-                checked={options.transparent}
-                onChange={(e) =>
-                  onOptionChange("transparent", e.target.checked)
-                }
-              />
-            </div>
-            <div className={styles.optionSubItem}>
-              <label>블러 효과</label>
-              <input
-                type="checkbox"
-                checked={options.blur}
-                onChange={(e) => onOptionChange("blur", e.target.checked)}
-              />
-            </div>
-          </div>
-        </div>
 
-        <div className={styles.optionItem}>
-          <label>테두리 설정</label>
-          <div className={styles.optionGroup}>
             <div className={styles.optionSubItem}>
               <label>하단 테두리</label>
               <input
@@ -227,24 +170,34 @@ function NavbarOptionsPanel({ options, onOptionChange }: NavbarOptionsProps) {
                 }
               />
             </div>
-            <div className={styles.optionSubItem}>
-              <label>테두리 색상</label>
-              <input
-                type="color"
-                value={options.borderColor}
-                onChange={(e) => onOptionChange("borderColor", e.target.value)}
-              />
-            </div>
-            <div className={styles.optionSubItem}>
-              <label>테두리 두께</label>
-              <input
-                type="number"
-                value={parseInt(options.borderWidth) || 0}
-                onChange={(e) =>
-                  onOptionChange("borderWidth", `${e.target.value}px`)
-                }
-              />
-            </div>
+
+            {options.borderBottom && (
+              <>
+                <div className={styles.optionSubItem}>
+                  <label>테두리 색상</label>
+                  <input
+                    type="color"
+                    value={options.borderColor}
+                    onChange={(e) =>
+                      onOptionChange("borderColor", e.target.value)
+                    }
+                  />
+                </div>
+
+                <div className={styles.optionSubItem}>
+                  <label>테두리 두께 (px)</label>
+                  <input
+                    type="number"
+                    min="1"
+                    max="10"
+                    value={parseInt(options.borderWidth) || 1}
+                    onChange={(e) =>
+                      onOptionChange("borderWidth", `${e.target.value}px`)
+                    }
+                  />
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>

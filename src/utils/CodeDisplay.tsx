@@ -42,12 +42,38 @@ export function generateButtonCode(
       roundedClass = "rounded-xl";
     }
 
+    // 호버 효과 클래스
+    let hoverClass = "";
+    if (options.hoverEffect === "scale") {
+      hoverClass = "hover:scale-105";
+    } else if (options.hoverEffect === "lift") {
+      hoverClass = "hover:-translate-y-1";
+    } else if (options.hoverEffect === "glow") {
+      hoverClass = "hover:shadow-lg";
+    }
+
+    // 클릭 효과 클래스
+    let activeClass = "";
+    if (options.clickEffect === "press") {
+      activeClass = "active:scale-95";
+    } else if (options.clickEffect === "ripple") {
+      activeClass = "relative overflow-hidden active:bg-opacity-80";
+    }
+
+    // 비활성화 클래스
+    const disabledClass = options.disabled
+      ? "opacity-50 cursor-not-allowed"
+      : "";
+
     return `
-      <button className="bg-[${options.backgroundColor}] text-[${
+    <button 
+  className="bg-[${options.backgroundColor}] text-[${
       options.color
-    }] ${sizeClasses} ${roundedClass} border-none cursor-pointer transition-all hover:brightness-95 active:scale-95">
-        ${options.text || "버튼"}
-      </button>`;
+    }] ${sizeClasses} ${roundedClass} border-none cursor-pointer transition-all ${hoverClass} ${activeClass} ${disabledClass}" 
+  ${options.disabled ? "disabled" : ""}
+>
+  ${options.text || "버튼"}
+</button>`;
   } else if (codeFormat === "react-scss") {
     let sizeClass = "";
 
@@ -60,45 +86,56 @@ export function generateButtonCode(
     }
 
     return `
-      <button className={button ${sizeClass}}>
-        ${options.text || "버튼"}
-      </button>
-      
+ <button className={\`\${styles.button} \${styles.${sizeClass}}\`} ${
+      options.disabled ? "disabled" : ""
+    }>
+  ${options.text || "버튼"}
+</button>
       
       .button {
-        background-color: ${options.backgroundColor};
-        color: ${options.color};
-        border-radius: ${options.borderRadius};
-        border: none;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        
-        &:hover {
-          filter: brightness(1.05);
-          transform: translateY(-1px);
-        }
-        
-        &:active {
-          filter: brightness(0.95);
-          transform: translateY(1px);
-        }
-      }
-      
-      .buttonSm {
-        padding: 6px 12px;
-        font-size: 0.85rem;
-      }
-      
-      .buttonMd {
-        padding: 8px 16px;
-        font-size: 1rem;
-      }
-      
-      .buttonLg {
-        padding: 10px 20px;
-        font-size: 1.1rem;
-      }
-      `;
+  background-color: ${options.backgroundColor};
+  color: ${options.color};
+  border-radius: ${options.borderRadius};
+  border: none;
+  cursor: ${options.disabled ? "not-allowed" : "pointer"};
+  transition: all 0.2s ease;
+  ${options.disabled ? "opacity: 0.5;" : ""}
+  
+  &:hover {
+    ${options.hoverEffect === "scale" ? "transform: scale(1.05);" : ""}
+    ${options.hoverEffect === "lift" ? "transform: translateY(-3px);" : ""}
+    ${
+      options.hoverEffect === "glow"
+        ? "box-shadow: 0 5px 15px rgba(0,0,0,0.1);"
+        : ""
+    }
+  }
+  
+  &:active {
+    ${options.clickEffect === "press" ? "transform: scale(0.95);" : ""}
+    ${
+      options.clickEffect === "ripple"
+        ? "position: relative; overflow: hidden;"
+        : ""
+    }
+  }
+}
+
+.buttonSm {
+  padding: 6px 12px;
+  font-size: 0.85rem;
+}
+
+.buttonMd {
+  padding: 8px 16px;
+  font-size: 1rem;
+}
+
+.buttonLg {
+  padding: 10px 20px;
+  font-size: 1.1rem;
+}
+`;
   }
 
   return "// 지원되지 않는 포맷입니다.";
@@ -154,35 +191,136 @@ export function generateCardCode(
       paddingClass = "p-6";
     }
 
+    // 레이아웃 클래스
+    const layoutClass = options.layout === "horizontal" ? "flex" : "block";
+
+    // 이미지 위치 클래스
+    let imagePositionClass = "";
+    if (options.layout === "horizontal") {
+      imagePositionClass =
+        options.imagePosition === "left"
+          ? "order-first"
+          : options.imagePosition === "right"
+          ? "order-last"
+          : "";
+    }
+
+    // 콘텐츠 정렬
+    let contentAlignClass = "";
+    if (options.contentAlignment === "center") {
+      contentAlignClass = "text-center";
+    } else if (options.contentAlignment === "right") {
+      contentAlignClass = "text-right";
+    }
+
+    // 이미지 URL 체크
+    const hasImage = !!options.imageUrl;
+
     return `
-    <div className="bg-[${options.backgroundColor}] text-[${
+<div className="bg-[${options.backgroundColor}] text-[${
       options.color
-    }] ${roundedClass} ${shadowClass} ${paddingClass} overflow-hidden cursor-pointer transition-all hover:shadow-xl">
-      ${options.description || "카드 내용"}
-    </div>
-    `.trim();
+    }] ${roundedClass} ${shadowClass} ${paddingClass} overflow-hidden transition-all hover:shadow-xl ${layoutClass}">
+  ${
+    hasImage
+      ? `<div className="w-full ${
+          options.layout === "horizontal" ? "w-1/3" : ""
+        } ${imagePositionClass}">
+    <img 
+      src="${options.imageUrl}" 
+      alt="${options.title || "카드 이미지"}" 
+      className="w-full h-auto object-cover" 
+    />
+  </div>`
+      : ""
+  }
+  
+  <div className="${
+    hasImage && options.layout === "horizontal" ? "w-2/3 p-4" : "w-full"
+  } ${contentAlignClass}">
+    <h3 className="text-lg font-semibold mb-2">${
+      options.title || "카드 제목"
+    }</h3>
+    <p className="text-sm">${
+      options.description || "카드 설명을 입력하세요."
+    }</p>
+  </div>
+`.trim();
   } else if (codeFormat === "react-scss") {
     return `
-  <div className = "styles.card">
-      ${options.description || "카드 내용"}
+
+ <div className={styles.card}>
+  ${
+    options.imageUrl
+      ? `
+  <div className={styles.imageContainer}>
+    <img src="${options.imageUrl}" alt="${
+          options.title || "카드 이미지"
+        }" className={styles.image} />
+  </div>`
+      : ""
+  }
+  
+  <div className={styles.content}>
+    <h3 className={styles.title}>${options.title || "카드 제목"}</h3>
+    <p className={styles.description}>${
+      options.description || "카드 설명을 입력하세요."
+    }</p>
+  </div>
 </div>
 
-.custom-card {
+
+.card {
     backgroundColor: ${options.backgroundColor},
     color: ${options.color},
     borderRadius: ${options.borderRadius},
-    boxShadow: ${
+    box-shadow: ${
       options.shadow === "small"
-        ? "2px 2px 5px rgba(0, 0, 0, 0.3)"
+        ? "0 2px 5px rgba(0,0,0,0.1)"
         : options.shadow === "medium"
-        ? "5px 5px 10px rgba(0, 0, 0, 0.3)"
-        : "8px 8px 15px rgba(0, 0, 0, 0.3)"
+        ? "0 4px 10px rgba(0,0,0,0.1)"
+        : "0 8px 15px rgba(0,0,0,0.15)"
     };
     padding: ${options.padding},
-    overflow: "hidden",
-    cursor: "pointer",
+    overflow: hidden;
+    transition: all 0.3s ease;
+    display: ${options.layout === "horizontal" ? "flex" : "block"};
+      
+    &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 20px rgba(0,0,0,0.1);
+   } 
   }
-  
+
+  .imageContainer {
+  ${
+    options.layout === "horizontal"
+      ? `
+    width: 40%;
+    ${options.imagePosition === "right" ? "order: 2;" : ""}
+  `
+      : "width: 100%;"
+  }
+
+  .image {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.content {
+  ${options.layout === "horizontal" ? "width: 60%; padding: 1rem;" : ""}
+  text-align: ${options.contentAlignment};
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.description {
+  font-size: 0.9rem;
+}
   `.trim();
   }
   return "// 지원되지 않는 컴포넌트 또는 포맷입니다.";
@@ -193,6 +331,7 @@ export function generateNavbarCode(
   codeFormat: "react-tailwind" | "react-scss"
 ): string {
   if (codeFormat === "react-tailwind") {
+    // 높이 값 처리
     const heightValue = parseInt(options.height);
     let heightClass = "";
 
@@ -208,23 +347,60 @@ export function generateNavbarCode(
       heightClass = "h-20";
     }
 
+    // 그림자 클래스 생성
+    const shadowClass =
+      options.shadow === "none"
+        ? ""
+        : options.shadow === "small"
+        ? "shadow-sm"
+        : options.shadow === "medium"
+        ? "shadow"
+        : "shadow-lg";
+
+    // 포지션 클래스 생성
+    const positionClass = options.fixed
+      ? "fixed top-0 left-0 right-0 z-50"
+      : "";
+
+    // 테두리 클래스 생성
+    const borderClass = options.borderBottom
+      ? `border-b border-[${options.borderColor}]`
+      : "";
+
+    // 메뉴 위치에 따른 클래스
+    const menuPositionClass =
+      options.menuPosition === "center"
+        ? "justify-center"
+        : options.menuPosition === "right"
+        ? "justify-end"
+        : "justify-start";
+
     return `
-  <nav className = "flex items-center justify-between bg-[${
+
+  <nav className="flex items-center justify-between bg-[${
     options.backgroundColor
-  }] ${heightClass} w-full px-5 shadow-sm">
-    <div className = "font-bold text-[${options.logoColor}] text-xl">
+  }] ${heightClass} w-full px-5 ${shadowClass} ${positionClass} ${borderClass}">
+    <div className="font-bold text-[${options.logoColor}] ${
+      options.logoSize === "small"
+        ? "text-sm"
+        : options.logoSize === "large"
+        ? "text-xl"
+        : "text-lg"
+    }">
         ${options.logo || "브랜드명"}
     </div>
-    <ul className="flex gap-5 list-none m-0 p-0">
-       <li className="cursor-pointer text-[${
-         options.textColor
-       }] hover:underline">메뉴1</li>
-       <li className="cursor-pointer text-[${
-         options.textColor
-       }] hover:underline">메뉴2</li>
-       <li className="cursor-pointer text-[${
-         options.textColor
-       }] hover:underline">메뉴3</li>
+    <ul className="flex gap-[${
+      options.menuSpacing
+    }] list-none m-0 p-0 ${menuPositionClass}">
+       <li className="cursor-pointer text-[${options.textColor}] text-[${
+      options.menuFontSize
+    }] font-${options.menuFontWeight} hover:underline">메뉴1</li>
+       <li className="cursor-pointer text-[${options.textColor}] text-[${
+      options.menuFontSize
+    }] font-${options.menuFontWeight} hover:underline">메뉴2</li>
+       <li className="cursor-pointer text-[${options.textColor}] text-[${
+      options.menuFontSize
+    }] font-${options.menuFontWeight} hover:underline">메뉴3</li>
     </ul>
   </nav>
   `.trim();
@@ -240,43 +416,78 @@ export function generateNavbarCode(
           <li className = {styles.menuItem}>메뉴3</li>
         </ul>
 </nav>
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: ${options.backgroundColor};
+  height: ${options.height};
+  box-shadow: ${
+    options.shadow === "none"
+      ? "none"
+      : options.shadow === "small"
+      ? "0 2px 4px rgba(0,0,0,0.1)"
+      : options.shadow === "medium"
+      ? "0 4px 8px rgba(0,0,0,0.15)"
+      : "0 8px 16px rgba(0,0,0,0.2)"
+  };
+  padding: 0 20px;
+  width: 100%;
+  position: ${options.fixed ? "fixed" : "relative"};
+  ${options.fixed ? "top: 0; left: 0; right: 0; z-index: 100;" : ""}
+  ${
+    options.borderBottom
+      ? `border-bottom: ${options.borderWidth} solid ${options.borderColor};`
+      : ""
+  }
+}
 
-      .navbar {
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            backgroundColor: ${options.backgroundColor},
-            height: ${options.height},
-            boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-            padding: "0 20px",
-            width: "100%",
-            color: ${options.logoColor},
-      }
-
-      .logo {
-        fontWeight: "bold",
-        fontSize: "1.2rem",
-        color: ${options.logoColor},
-      }
-            
-      .menu {
-        display: "flex",
-        listStyle: "none",
-        gap: "20px",
-        margin: 0,
-        padding: 0,
-      }
+.logo {
+  font-weight: bold;
+  font-size: ${
+    options.logoSize === "small"
+      ? "0.9rem"
+      : options.logoSize === "large"
+      ? "1.5rem"
+      : "1.2rem"
+  };
+  color: ${options.logoColor};
+}
       
-      .menuItem {
-          cursor: "pointer",
-          color: ${options.textColor},
-
-          &:hover {
-          text-decoration: underline;
-      }
-    }     
+.menu {
+  display: flex;
+  list-style: none;
+  gap: ${options.menuSpacing};
+  margin: 0;
+  padding: 0;
+  justify-content: ${
+    options.menuPosition === "center"
+      ? "center"
+      : options.menuPosition === "right"
+      ? "flex-end"
+      : "flex-start"
+  };
+}
+      
+.menuItem {
+  cursor: pointer;
+  color: ${options.textColor};
+  font-size: ${options.menuFontSize};
+  font-weight: ${
+    options.menuFontWeight === "normal"
+      ? "normal"
+      : options.menuFontWeight === "medium"
+      ? "500"
+      : "bold"
+  };
+  
+  &:hover {
+    text-decoration: underline;
+  }
+}     
     `.trim();
   }
+
   return "// 지원되지 않는 컴포넌트 또는 포맷입니다.";
 }
 
@@ -327,7 +538,7 @@ export function CodeDisplay({
     <div className={styles.CodeDisplay}>
       <div className={styles.formatSelector}>
         <button
-          className={`${styles.formatButton} ${
+          className={`${styles.formatButton || ""} ${
             codeFormat === "react-tailwind" ? styles.active : ""
           }`}
           onClick={() => handleFormatChange("react-tailwind")}
@@ -335,7 +546,7 @@ export function CodeDisplay({
           Tailwind
         </button>
         <button
-          className={`${styles.formatButton} ${
+          className={`${styles.formatButton || ""} ${
             codeFormat === "react-scss" ? styles.active : ""
           }`}
           onClick={() => handleFormatChange("react-scss")}

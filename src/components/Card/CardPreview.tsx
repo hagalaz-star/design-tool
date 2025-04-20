@@ -28,8 +28,13 @@ function CardPreview({ options }: CardPreviewProps) {
 
   const imageStyle: CSSProperties = {
     width: options.layout === "vertical" ? "100%" : "40%",
-    height: options.layout === "vertical" ? "200px" : "100%",
-    objectFit: "cover",
+    minWidth: options.layout === "vertical" ? "auto" : "120px",
+    height: options.layout === "vertical" ? "200px" : "auto",
+    minHeight: "120px",
+    backgroundColor: "#f0f0f0",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
     order:
       options.imagePosition === "left"
         ? -1
@@ -48,16 +53,20 @@ function CardPreview({ options }: CardPreviewProps) {
 
   return (
     <div style={cardStyle} className={styles.card}>
-      {options.imageUrl && (
-        <img
-          src={options.imageUrl}
-          alt="Card"
-          style={imageStyle}
-          onError={(e) => {
-            e.currentTarget.src = "https://via.placeholder.com/400x200";
-          }}
-        />
-      )}
+      <div style={imageStyle}>
+        {options.imageUrl ? (
+          <img
+            src={options.imageUrl}
+            alt="Card"
+            style={imageStyle}
+            onError={(e) => {
+              e.currentTarget.src = "https://via.placeholder.com/400x200";
+            }}
+          />
+        ) : (
+          <span style={{ color: "#aaa" }}>이미지 영역</span>
+        )}
+      </div>
       <div style={contentStyle}>
         <h3 style={{ margin: "0 0 0.5rem 0" }}>
           {options.title || "카드 제목"}

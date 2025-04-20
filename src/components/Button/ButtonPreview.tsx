@@ -1,4 +1,4 @@
-import React, { CSSProperties } from "react";
+import React, { CSSProperties, useState } from "react";
 import { ButtonOptions } from "@/types";
 import styles from "./Button.module.scss";
 
@@ -7,6 +7,7 @@ interface ButtonPreviewProps {
 }
 
 function ButtonPreview({ options }: ButtonPreviewProps) {
+  // 기본 스타일 정의
   const buttonStyle: CSSProperties = {
     backgroundColor: options.backgroundColor,
     color: options.color,
@@ -33,55 +34,23 @@ function ButtonPreview({ options }: ButtonPreviewProps) {
     overflow: "hidden",
   };
 
-  // 호버 효과 적용
-  const hoverStyle: CSSProperties = {
-    ...buttonStyle,
-    transform:
-      options.hoverEffect === "scale"
-        ? "scale(1.05)"
-        : options.hoverEffect === "lift"
-        ? "translateY(-2px)"
-        : "none",
-    boxShadow:
-      options.hoverEffect === "glow" ? "0 0 10px rgba(0,0,0,0.2)" : "none",
-  };
-
-  // 클릭 효과 적용
-  const clickStyle: CSSProperties = {
-    ...buttonStyle,
-    transform: options.clickEffect === "press" ? "scale(0.95)" : "none",
-  };
+  // 동적 클래스 생성
+  const buttonClasses = [
+    styles.button,
+    options.hoverEffect ? styles[`hover-${options.hoverEffect}`] : "",
+    options.clickEffect ? styles[`click-${options.clickEffect}`] : "",
+    options.disabled ? styles.disabled : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   return (
     <button
       style={buttonStyle}
-      className={styles.button}
+      className={buttonClasses}
       disabled={options.disabled}
-      onMouseEnter={(e) => {
-        if (!options.disabled) {
-          Object.assign(e.currentTarget.style, hoverStyle);
-        }
-      }}
-      onMouseLeave={(e) => {
-        if (!options.disabled) {
-          Object.assign(e.currentTarget.style, buttonStyle);
-        }
-      }}
-      onMouseDown={(e) => {
-        if (!options.disabled) {
-          Object.assign(e.currentTarget.style, clickStyle);
-        }
-      }}
-      onMouseUp={(e) => {
-        if (!options.disabled) {
-          Object.assign(e.currentTarget.style, buttonStyle);
-        }
-      }}
     >
       {options.text || "버튼"}
-      {options.clickEffect === "ripple" && (
-        <span className={styles.ripple}></span>
-      )}
     </button>
   );
 }
