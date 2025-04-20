@@ -1,4 +1,4 @@
-import axios, { Axios } from "axios";
+import axios from "axios";
 import styles from "./AiDesign.module.scss";
 import React, { useState } from "react";
 import { ComponentType } from "../../types/index";

@@ -57,7 +57,7 @@ function CardPreview({ options }: CardPreviewProps) {
         {options.imageUrl ? (
           <img
             src={options.imageUrl}
-            alt="Card"
+            alt={`Card - ${options.title || "Card Image"}`}
             style={imageStyle}
             onError={(e) => {
               e.currentTarget.src = "https://via.placeholder.com/400x200";

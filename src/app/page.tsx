@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Generator from "../components/Generator/Generator";
 
 export default function Home() {

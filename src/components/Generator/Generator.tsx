@@ -1,7 +1,7 @@
 "use client";
 
 import styles from "./Generator.module.scss";
-import React, { Component, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo } from "react";
 
 import ButtonCode from "../Button/ButtonCodeGenerator";
 import ButtonOptionsPanel from "../Button/ButtonOptions";
@@ -33,37 +33,6 @@ import {
 } from "@/types/index";
 
 import useComponentStore from "@/store/useComponentStore";
-import { config } from "process";
-
-type ComponentOptions = {
-  // 공통 옵션
-  width?: string;
-  height?: string;
-  backgroundColor?: string;
-  color?: string;
-  // 버튼 옵션
-  text?: string;
-  borderRadius?: string;
-  // 카드 옵션
-  title?: string;
-  content?: string;
-  // 네비게이션 바 옵션
-  items?: string[];
-};
-
-const defaultOptions: ComponentOptions = {
-  width: "auto",
-  height: "auto",
-  backgroundColor: "#ffffff",
-  color: "#000000",
-  text: "버튼",
-  borderRadius: "4px",
-  title: "카드 제목",
-  content: "카드 내용",
-  items: ["홈", "소개", "서비스", "연락처"],
-};
-
-const componentTypes: ComponentType[] = ["button", "card", "navbar"];
 
 const componentConfig = {
   button: {
@@ -89,16 +58,11 @@ function Generator() {
     componentOptions,
     codeFormat,
     customCode,
-    isPreviewZoomed,
     setSelectedComponent,
     setComponentOptions,
     setCodeFormat,
     setCustomCode,
-    togglePreviewZoom,
   } = useComponentStore();
-
-  const [selectedType, setSelectedType] = useState<ComponentType>("button");
-  const [options, setOptions] = useState<ComponentOptions>(defaultOptions);
 
   // 사용자가 다른 컴포넌트 유형(버튼, 카드, 네비게이션 바 등)을 선택했을 때 처리
   const handleOptionChange = (name: string, value: any) => {
@@ -106,7 +70,6 @@ function Generator() {
 
     const newOptions = { ...componentOptions, [name]: value };
     console.log("새 상태:", newOptions);
-
     setComponentOptions(name as any, value);
 
     return newOptions;
@@ -115,9 +78,12 @@ function Generator() {
   // 컴포넌트 타입 변경 핸들러
   const handleComponentTypeChange = (newType: ComponentType) => {
     setSelectedComponent(newType);
-    setOptions(defaultOptions);
   };
 
+  // 옵션 변경 핸들러
+  const handleFormatChange = (format: "react-tailwind" | "react-scss") => {
+    setCodeFormat(format);
+  };
   // AI 최적화 코드 적용 핸들러
   const handleOptimizedCode = (code: string) => {
     setCustomCode(code);
@@ -191,19 +157,32 @@ function Generator() {
   return (
     <div className={styles.generatorContainer}>
       <div className={styles.componentSelector}>
-        <h2>컴포넌트 생성기</h2>
+        <h2>컴포넌트 선택</h2>
         <div className={styles.typeButtons}>
-          {componentTypes.map((type) => (
-            <button
-              key={type}
-              className={`${styles.typeButton} ${
-                selectedComponent === type ? styles.active : ""
-              }`}
-              onClick={() => setSelectedComponent(type)}
-            >
-              {type}
-            </button>
-          ))}
+          <button
+            className={`${styles.typeButton} ${
+              selectedComponent === "button" ? styles.active : ""
+            }`}
+            onClick={() => handleComponentTypeChange("button")}
+          >
+            버튼
+          </button>
+          <button
+            className={`${styles.typeButton} ${
+              selectedComponent === "card" ? styles.active : ""
+            }`}
+            onClick={() => handleComponentTypeChange("card")}
+          >
+            카드
+          </button>
+          <button
+            className={`${styles.typeButton} ${
+              selectedComponent === "navbar" ? styles.active : ""
+            }`}
+            onClick={() => handleComponentTypeChange("navbar")}
+          >
+            네비게이션 바
+          </button>
         </div>
 
         {/* 옵션 패널 */}
@@ -217,12 +196,7 @@ function Generator() {
         {/* 미리보기 섹션 */}
         <div className={styles.previewSection}>
           <h3>미리보기</h3>
-          <div
-            className={`${styles.previewContainer} ${
-              isPreviewZoomed ? styles.zoomed : ""
-            }`}
-            onClick={togglePreviewZoom}
-          >
+          <div className={styles.previewContainer}>
             <CurrentComponent.Preview options={componentOptions} />
           </div>
         </div>
@@ -233,7 +207,7 @@ function Generator() {
           <CurrentComponent.Code
             options={componentOptions}
             codeFormat={codeFormat}
-            onFormatChange={setCodeFormat}
+            onFormatChange={handleFormatChange}
             customCode={customCode}
           />
         </div>
