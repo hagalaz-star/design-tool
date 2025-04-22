@@ -1,108 +1,84 @@
 import { create } from "zustand";
-import {
-  ComponentType,
-  ComponentOptionsTypeMap,
-  ButtonOptions,
-  CardOptions,
-  NavbarOptions,
-} from "../types/index";
+import { ButtonOptions, CardOptions, NavbarOptions } from "@/types";
 
-const ButtonDefaults: ButtonOptions = {
-  backgroundColor: "#3a86ff",
-  size: "medium",
-  borderRadius: "4px",
-  text: "버튼",
-  color: "#B096A5",
-  hoverEffect: "scale",
-  clickEffect: "press",
-  disabled: false,
-};
-
-const CardDefaults: CardOptions = {
-  backgroundColor: "#ffffff",
-  borderRadius: "8px",
-  shadow: "medium",
-  padding: "16px",
-  color: "#D9643F",
-
-  layout: "vertical",
-  imagePosition: "top",
-  contentAlignment: "left",
-
-  title: "카드 제목",
-  description: "카드 설명을 입력하세요.",
-  imageUrl: "",
-};
-
-const NavbarDefaults: NavbarOptions = {
-  // 기본 스타일
-  backgroundColor: "#ffffff",
-  textColor: "#333333",
-  height: "60px",
-
-  // 로고
-  logo: "",
-  logoColor: "#333333",
-  logoSize: "medium",
-
-  // 메뉴
-  menuItems: ["홈", "소개", "서비스", "연락처"],
-  menuPosition: "right",
-  menuSpacing: "20px",
-  menuFontSize: "16px",
-  menuFontWeight: "normal",
-
-  // 반응형
-  breakpoint: "md",
-  mobileMenuIcon: "hamburger",
-  mobileMenuColor: "#333333",
-
-  // 효과
-  fixed: false,
-  shadow: "none",
-  transparent: false,
-  blur: false,
-
-  // 테두리
-  borderBottom: false,
-  borderColor: "#e0e0e0",
-  borderWidth: "1px",
-};
-
-// 컴포넌트 타입에 따른 기본값 매핑
-const defaultOptions = {
-  button: ButtonDefaults,
-  card: CardDefaults,
-  navbar: NavbarDefaults,
-};
-
-interface ComponentStore {
-  // 상태(State) 부분
-  selectedComponent: ComponentType;
-  componentOptions: ComponentOptionsTypeMap[ComponentType];
+interface ComponentState {
+  selectedComponent: "button" | "card" | "navbar";
+  buttonOptions: ButtonOptions;
+  cardOptions: CardOptions;
+  navbarOptions: NavbarOptions;
+  isPreviewZoomed: boolean;
   codeFormat: "react-tailwind" | "react-scss";
   customCode: string | null;
-  isPreviewZoomed: boolean;
-
-  // 액션(Action)부분
-  setSelectedComponent: (newType: ComponentType) => void;
-  setComponentOptions: <T extends ComponentType>(
-    name: keyof ComponentOptionsTypeMap[T],
-    value: any
-  ) => void;
+  setSelectedComponent: (component: "button" | "card" | "navbar") => void;
+  setButtonOptions: (options: ButtonOptions) => void;
+  setCardOptions: (options: CardOptions) => void;
+  setNavbarOptions: (options: NavbarOptions) => void;
   setCodeFormat: (format: "react-tailwind" | "react-scss") => void;
   setCustomCode: (code: string | null) => void;
-  resetOptions: () => void;
   togglePreviewZoom: () => void;
 }
 
-const useComponentStore = create<ComponentStore>((set) => ({
-  // 초기 상태 값
+const useComponentStore = create<ComponentState>((set) => ({
   selectedComponent: "button",
-  componentOptions: ButtonDefaults as ComponentOptionsTypeMap[ComponentType],
+  buttonOptions: {
+    backgroundColor: "#4CAF50",
+    color: "#ffffff",
+    text: "버튼",
+    size: "medium",
+    borderRadius: "4px",
+    hoverEffect: "scale",
+    clickEffect: "press",
+    disabled: false,
+  },
+  cardOptions: {
+    backgroundColor: "#ffffff",
+    color: "#333333",
+    borderRadius: "8px",
+    shadow: "medium",
+    padding: "16px",
+    layout: "vertical",
+    imagePosition: "top",
+    contentAlignment: "left",
+    title: "카드 제목",
+    description: "카드 설명을 입력하세요.",
+    imageUrl: "",
+  },
+  navbarOptions: {
+    backgroundColor: "#ffffff",
+    textColor: "#333333",
+    height: "60px",
+    logo: "",
+    logoColor: "#333333",
+    logoSize: "medium",
+    menuItems: ["홈", "소개", "서비스", "연락처"],
+    menuPosition: "right",
+    menuSpacing: "20px",
+    menuFontSize: "16px",
+    menuFontWeight: "normal",
+    breakpoint: "md",
+    mobileMenuIcon: "hamburger",
+    mobileMenuColor: "#333333",
+    fixed: false,
+    shadow: "none",
+    transparent: false,
+    blur: false,
+    borderBottom: false,
+    borderColor: "#e0e0e0",
+    borderWidth: "1px",
+  },
+  isPreviewZoomed: false,
   codeFormat: "react-tailwind",
   customCode: null,
-  isPreviewZoomed: false,
+  setSelectedComponent: (component) => set({ selectedComponent: component }),
+  setButtonOptions: (options) => set({ buttonOptions: options }),
+  setCardOptions: (options) => set({ cardOptions: options }),
+  setNavbarOptions: (options) => set({ navbarOptions: options }),
+  setCodeFormat: (format) => set({ codeFormat: format }),
+  setCustomCode: (code) => set({ customCode: code }),
+  togglePreviewZoom: () => set((state) => ({ isPreviewZoomed: !state.isPreviewZoomed })),
+}));
+
+export default useComponentStore;
 
   // 컴포넌트 타입 변경 시 해당 타입의 기본 옵션으로 상태 초기화
   setSelectedComponent: (newType) =>
@@ -144,4 +120,4 @@ const useComponentStore = create<ComponentStore>((set) => ({
     })),
 }));
 
-export default useComponentStore;
+

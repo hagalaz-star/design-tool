@@ -52,56 +52,70 @@ const componentConfig = {
   },
 };
 
-function Generator() {
+const Generator = () => {
   const {
     selectedComponent,
-    componentOptions,
+    buttonOptions,
+    cardOptions,
+    navbarOptions,
+    setSelectedComponent,
+    setButtonOptions,
+    setCardOptions,
+    setNavbarOptions,
     codeFormat,
     customCode,
-    setSelectedComponent,
-    setComponentOptions,
     setCodeFormat,
     setCustomCode,
   } = useComponentStore();
 
-  // 사용자가 다른 컴포넌트 유형(버튼, 카드, 네비게이션 바 등)을 선택했을 때 처리
-  const handleOptionChange = (name: string, value: any) => {
-    console.log(`옵션 변경: ${name}=${value}`);
-
-    const newOptions = { ...componentOptions, [name]: value };
-    console.log("새 상태:", newOptions);
-    setComponentOptions(name as any, value);
-
-    return newOptions;
+  const handleOptionChange = (
+    componentType: "button" | "card" | "navbar",
+    name: string,
+    value: string | boolean | number
+  ) => {
+    switch (componentType) {
+      case "button":
+        setButtonOptions({
+          ...buttonOptions,
+          [name]: value,
+        } as ButtonOptions);
+        break;
+      case "card":
+        setCardOptions({
+          ...cardOptions,
+          [name]: value,
+        } as CardOptions);
+        break;
+      case "navbar":
+        setNavbarOptions({
+          ...navbarOptions,
+          [name]: value,
+        } as NavbarOptions);
+        break;
+    }
   };
-
   // 컴포넌트 타입 변경 핸들러
-  const handleComponentTypeChange = (newType: ComponentType) => {
-    setSelectedComponent(newType);
+  const handleComponentTypeChange = (type: "button" | "card" | "navbar") => {
+    setSelectedComponent(type);
   };
 
-  // 옵션 변경 핸들러
   const handleFormatChange = (format: "react-tailwind" | "react-scss") => {
     setCodeFormat(format);
   };
-  // AI 최적화 코드 적용 핸들러
+
   const handleOptimizedCode = (code: string) => {
     setCustomCode(code);
   };
 
-  // AI 디자인 선택 핸들러
   const onSelectDesign = (code: string) => {
     setCustomCode(code);
   };
 
-  // useEffect를 추가하면 selectedComponent가 변경될 때마다 customCode가 초기화됨
   useEffect(() => {
     setCustomCode(null);
   }, [selectedComponent]);
 
-  // 현재 컴포넌트에 맞는 컴포넌트 가져오기
   const CurrentComponent = useMemo(() => {
-    // 현재 선택된 컴포넌트에 대한 타입 지정
     type CurrentType = typeof selectedComponent;
     type SelectCurrnet = ComponentOptionsTypeMap[CurrentType];
     const config = componentConfig[selectedComponent];
@@ -123,8 +137,6 @@ function Generator() {
     };
   }, [selectedComponent]);
 
-  // 선택된 컴포넌트 타입, 옵션, 코드 포맷에 따라 적절한 코드를 생성하는 함수
-  // 코드 생성 로직을 분리하여 Generator 컴포넌트의 복잡도를 줄이고 재사용성을 높임
   function generatedCurrentCode(
     componentType: ComponentType,
     options: ComponentOptionsTypeMap[ComponentType],
@@ -145,14 +157,23 @@ function Generator() {
     }
   }
 
-  // 컴포넌트 타입 , 옵션 , 코드포맷으로 재생성하여 성능 최적화
   const currentCodeString = useMemo(() => {
     return generatedCurrentCode(
       selectedComponent,
-      componentOptions,
+      selectedComponent === "button"
+        ? buttonOptions
+        : selectedComponent === "card"
+        ? cardOptions
+        : navbarOptions,
       codeFormat
     );
-  }, [selectedComponent, componentOptions, codeFormat]);
+  }, [
+    selectedComponent,
+    buttonOptions,
+    cardOptions,
+    navbarOptions,
+    codeFormat,
+  ]);
 
   return (
     <div className={styles.generatorContainer}>
@@ -185,38 +206,87 @@ function Generator() {
           </button>
         </div>
 
-        {/* 옵션 패널 */}
         <div className={styles.workArea}>
-          <CurrentComponent.Options
-            options={componentOptions}
-            onOptionChange={handleOptionChange}
-          />
+          {selectedComponent === "button" && (
+            <ButtonOptionsPanel
+              options={buttonOptions}
+              onOptionChange={(name, value) =>
+                handleOptionChange("button", name, value)
+              }
+            />
+          )}
+          {selectedComponent === "card" && (
+            <CardOptionsPanel
+              options={cardOptions}
+              onOptionChange={(name, value) =>
+                handleOptionChange("card", name, value)
+              }
+            />
+          )}
+          {selectedComponent === "navbar" && (
+            <NavbarOptionsPanel
+              options={navbarOptions}
+              onOptionChange={(name, value) =>
+                handleOptionChange("navbar", name, value)
+              }
+            />
+          )}
         </div>
 
-        {/* 미리보기 섹션 */}
         <div className={styles.previewSection}>
           <h3>미리보기</h3>
           <div className={styles.previewContainer}>
-            <CurrentComponent.Preview options={componentOptions} />
+            {selectedComponent === "button" && (
+              <ButtonPreview options={buttonOptions} />
+            )}
+            {selectedComponent === "card" && (
+              <CardPreview options={cardOptions} />
+            )}
+            {selectedComponent === "navbar" && (
+              <NavbarPreview options={navbarOptions} />
+            )}
           </div>
         </div>
 
-        {/* 코드 디스플레이 섹션 */}
         <div className={styles.codeSection}>
           <h3>코드</h3>
-          <CurrentComponent.Code
-            options={componentOptions}
-            codeFormat={codeFormat}
-            onFormatChange={handleFormatChange}
-            customCode={customCode}
-          />
+          {selectedComponent === "button" && (
+            <ButtonCode
+              options={buttonOptions}
+              codeFormat={codeFormat}
+              onFormatChange={handleFormatChange}
+              customCode={customCode}
+            />
+          )}
+          {selectedComponent === "card" && (
+            <CardCode
+              options={cardOptions}
+              codeFormat={codeFormat}
+              onFormatChange={handleFormatChange}
+              customCode={customCode}
+            />
+          )}
+          {selectedComponent === "navbar" && (
+            <NavbarCode
+              options={navbarOptions}
+              codeFormat={codeFormat}
+              onFormatChange={handleFormatChange}
+              customCode={customCode}
+            />
+          )}
         </div>
 
         <div>
           <AIOptimizer
             currentCode={currentCodeString}
             componentType={selectedComponent}
-            options={componentOptions}
+            options={
+              selectedComponent === "button"
+                ? buttonOptions
+                : selectedComponent === "card"
+                ? cardOptions
+                : navbarOptions
+            }
             codeFormat={codeFormat}
             onApplyOptimized={handleOptimizedCode}
           />
@@ -231,6 +301,6 @@ function Generator() {
       </div>
     </div>
   );
-}
+};
 
 export default Generator;
