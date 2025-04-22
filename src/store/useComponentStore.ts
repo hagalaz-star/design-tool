@@ -75,49 +75,8 @@ const useComponentStore = create<ComponentState>((set) => ({
   setNavbarOptions: (options) => set({ navbarOptions: options }),
   setCodeFormat: (format) => set({ codeFormat: format }),
   setCustomCode: (code) => set({ customCode: code }),
-  togglePreviewZoom: () => set((state) => ({ isPreviewZoomed: !state.isPreviewZoomed })),
+  togglePreviewZoom: () =>
+    set((state) => ({ isPreviewZoomed: !state.isPreviewZoomed })),
 }));
 
 export default useComponentStore;
-
-  // 컴포넌트 타입 변경 시 해당 타입의 기본 옵션으로 상태 초기화
-  setSelectedComponent: (newType) =>
-    set({
-      selectedComponent: newType,
-      componentOptions: defaultOptions[
-        newType
-      ] as ComponentOptionsTypeMap[ComponentType],
-      customCode: null,
-      isPreviewZoomed: false,
-    }),
-
-  // 특정 옵션 업데이트
-  setComponentOptions: (name, value) => {
-    set((state) => ({
-      componentOptions: {
-        ...state.componentOptions,
-        [name]: value,
-      } as ComponentOptionsTypeMap[ComponentType],
-    }));
-  },
-
-  setCodeFormat: (format) => set({ codeFormat: format }),
-
-  setCustomCode: (code) => set({ customCode: code }),
-
-  // 현재 선택된 컴포넌트 타입의 옵션을 기본값으로 리셋
-  resetOptions: () =>
-    set((state) => ({
-      componentOptions: defaultOptions[state.selectedComponent],
-      customCode: null,
-      isPreviewZoomed: false,
-    })),
-
-  // 프리뷰 확대/축소 토글
-  togglePreviewZoom: () =>
-    set((state) => ({
-      isPreviewZoomed: !state.isPreviewZoomed,
-    })),
-}));
-
-
